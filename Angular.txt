@@ -1,0 +1,2739 @@
+Contents:
+1. Componentnts
+2. App
+3. app.routing-module.ts
+4. Modules
+5. Data Binding
+6. Parent-Child Component
+7. Directives
+8. Template Reference Variable
+9. @ViewChild() in Angular
+10. View Encapsulation
+11. Content Projection
+12. @ContentChild()
+13. Services
+14. Observables
+15. Routing
+16. Route Guards
+17. Pipes
+18. Events in angular
+19. Automatic Change Detection in Angular
+20. InBuilt Pipes in Angular
+21. Interfaces in angular
+22. Forms in Angular 
+23. Bootstraping Angular Application
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1) Componentnts:
+===================
+Components are the basic building blocks of an Angular application. Each component represents a part of the user interface and is responsible for its own view and logic. 
+
+Components consist of three main parts:
+Template: The HTML markup that defines the component's view.
+Class: The TypeScript code that defines the component's behavior and data.
+Metadata: Decorators (such as @Component) that provide additional information about the component.
+
+Command to create component:
+---------------------------
+ng g c component-name
+
+When a component is created, 4 files are created.
+Ex: ng g c child
+
+1)child.component.html: This HTML file contains the template for the component. It defines the structure of the component's view, including the HTML markup, data bindings, and placeholders for dynamic content.
+
+2)child.component.css: If the component requires specific styles separate from the main CSS file, this file can be used. It allows you to include component-specific styles not included in the global styles.
+
+3)child.component.ts: This TypeScript file defines the component class. It contains the component's logic, properties, methods, and lifecycle hooks. The class is usually decorated with the @Component decorator to provide metadata about the component, such as its selector, template, and styles.
+
+4)child.component.spec.ts: This file is used for unit testing the component. It contains test cases and assertions to ensure that the component's behavior works as expected.
+
+
+Creating Component:
+-------------------
+The main part of a component is the .ts file. It will be having @Component decorative. When a class is decorated with @Component decorator, it is treated as component. Decorator is a function which is used to add metadata to a class. Some of them are, selector, template/templateUrl, styleUrls.
+
+In a component only .ts file is necessary. The html and css can be included in the .ts file. But in order to write modular, non error-prone code, we will use external html and css files. 
+
+Ex:
+1)
+Here i can write entire html within the template property.
+
+@Component({
+  selector: 'app-first',
+  template: '<h3>App component</h3>',
+  styleUrls: ['./first.component.css']
+})
+
+export class AppComponent{
+}
+
+2)Similarly css can also be used here within styles property which is an array. [Note: Dont provide comma for separate styles.]
+@Component({
+  selector: 'app-first',
+  template: `<h3>This is new header</h3>
+			 <app-second></app-second>`,
+  styles: [`h3{
+    background-color: gray;
+  } //No need of comma
+  h3:hover{
+    color:red;
+  }`]
+})
+export class FirstComponent{
+}
+
+
+Creating both template and styles in same file is hard to maintain and debug. So we externalize those files. Its recommended to use internal template only when you have very few html code to render. 
+Dont use single/double quotes for string creation as they dont support multiple lines. Use backtik instead.
+
+3)In styleUrls array, we can provide multiple css files.
+
+
+4)Selector
+<app-header></app-header> whereever these selectors are used, it renders the html of that selector in specified place.
+
+5)Using selectors as an attribute
+In .ts file,
+@Component ({
+ selector:'[app-first]'
+}
+)
+
+Now it cannnot be used as <app-first></app-first>. Instead it needs to be used as an attribute as follows.
+<div app-first></div>
+
+6)Using selectors as class
+@Component ({
+ selector:'.app-first'
+}
+)
+
+Now it cannnot be used as <app-first></app-first>. Instead it needs to be used as an attribute as follows.
+<div class="app-first"></div>
+
+6)Using selectors as an ID
+@Component ({
+ selector:'#app-first'
+}
+)
+
+Now it cannnot be used as <app-first></app-first>. Instead it needs to be used as an attribute as follows.
+<div id="app-first"></div>
+
+Most of the time only normal selector tag is used.
+
+
+
+
+2)App    :
+==========
+In Angular, the term "app" can refer to both a component and a module, depending on the context.
+
+App Component:
+The "app component" typically refers to the root component of an Angular application. It is the top-level component that serves as the entry point for your application. When you generate a new Angular project using the Angular CLI, it often creates an "AppComponent" as the root component.
+
+
+App Module:
+The "app module" refers to the root module of your Angular application. By default, this module is named "AppModule" and is defined in a file called "app.module.ts."
+The app module is responsible for bootstrapping the Angular application and providing the necessary configuration, including importing other modules and components, setting up routes, and configuring dependency injection.
+
+
+3)app.routing-module.ts :
+========================
+*It is responsible for setting up and managing the application's routing and navigation. 
+*It supports Lazy loading.
+*Lazy loading means you can load modules and components on-demand, improving the initial loading time of your application. This feature is especially beneficial for large applications with many components and modules.
+
+
+4) Modules :
+===========
+*In Angular, modules are a fundamental concept used to organize and structure your application.
+*They are a way to group related components, services, and other application parts into cohesive  units. 
+*Modules help improve the maintainability, testability, and scalability of your Angular applications. 
+
+Here's an overview of modules in Angular:
+1. **NgModule Decorator**: Modules are created using the `@NgModule` decorator in TypeScript. This decorator is applied to a class and provides metadata that tells Angular how to compile and run the module.
+
+2. **NgModule Properties**:
+
+   - **declarations**: This property lists all the components, directives, and pipes that belong to the module. Angular needs to know which components are part of the module to compile and render them.
+
+   - **imports**: This property specifies other modules that this module depends on. It allows you to reuse code from other modules, making your application more modular. For example, you can import the `FormsModule` to enable form-related features or the `HttpClientModule` for making HTTP requests.
+
+   - **providers**: Here, you list the services that the module provides. These services are available for injection into components or other parts of the application. Services listed here are typically singletons, meaning there is only one instance of each service for the entire application.
+
+   - **bootstrap**: In the root module (usually named `AppModule`), this property specifies the component that should be bootstrapped when the application starts. This is typically the root component of your application.
+
+   - **exports**: This property allows you to make certain components, directives, or pipes from your module available for use in other modules. It's useful when you want to create reusable modules that can be used in multiple parts of your application.
+
+
+Types of Modules
+----------------
+1. **Feature Modules**: In addition to the root module (`AppModule`), Angular applications often include feature modules (User Defined Modules). Feature modules are used to organize related functionality within your application. They have their own `@NgModule` decorator, which defines components, services, and other features specific to that module. Feature modules help keep your codebase organized and maintainable.
+
+2. **Shared Modules**: Shared modules are a way to organize and reuse common components, directives, and pipes across multiple modules. They help prevent duplication of code and ensure consistency in your application. Shared modules typically export the common components, making them available for other modules to import.
+
+3. **Core Module**: The core module is a special module used for organizing services and other global features that are shared across the entire application. It helps keep your root module (`AppModule`) clean and focused on app setup.
+
+4. **Third-Party Modules**: Angular allows you to integrate third-party libraries and modules into your application. You can import and configure these modules within your own modules, enabling you to leverage external functionality seamlessly.
+
+
+Command to create a feature module
+----------------------------------
+ng g m module-name
+
+command to create component within a feature module
+---------------------------------------------------
+ng g c module-name/component-name
+
+
+
+5) Data Binding :
+================
+it is a mechanism to establish a connection between your application's data and the user interface (UI). It enables you to keep the UI and the underlying data in sync without manually manipulating the DOM or handling user interactions extensively. 
+
+Types of data binding:
+----------------------
+1)One way data binding:  Here data is transferred from the component class (ts file) to the template (UI) or vice versa, but not both simultaneously. One-way data binding is typically used when you want to display data in the template or handle user interactions in the component class.
+
+*Interpolation :
+----------------
+Interpolation is a simple form of one-way data binding where you insert values from the component class directly into the template using double curly braces {{ }}. The value inside the curly braces is evaluated as an expression and displayed in the template.
+
+Ex:
+<p>{{ message }}</p>
+
+In this example, the message property from the component class will be displayed in the paragraph element.
+
+Any expressions within that double quote is allowed. Even function calls, ternary operators that evaluates to a value are allowed within the string interpolation.
+
+
+*Property binding :
+------------------
+Property binding allows you to set the value of an HTML element's property or attribute to a value from the component class. You use square brackets [ ] to bind a property in the template to a property or expression in the component class.
+
+Ex:
+<img [src]="imageUrl">
+
+Instead of [] we can also use it like,
+<img bind-src ="imageUrl">
+
+imageUrl is the property in the component class. Within "" we can provide any valid typescript expresiion.
+
+Note:
+-----
+The above thing can also be done with interpolation. 
+<img src={{imageUrl}}>
+
+
+Difference between interpolation and property bnding
+-----------------------------------------------------
+The main difference between property binding and interpolation lies in where the data is being displayed. Property binding is used to set HTML element properties based on component properties, affecting the behavior or attributes of the element. Interpolation, on the other hand, is used to display the value of a component property within the content of an HTML element.
+
+
+
+*Style binding :
+---------------
+*Style binding in Angular allows you to dynamically set CSS styles for HTML elements in your templates based on values from the component class.
+*It provides a way to change the appearance of elements based on data or conditions, making your application more interactive and responsive.
+
+>Using a Single Style Property:
+------------------------------
+<div [style.color]="textColor">This text can change color</div>
+
+textColor property in the component class. When textColor changes in the component, it will dynamically update the text color of the <div> element.
+
+>Using Multiple Style Properties:
+---------------------------------
+<div [style]="{ 'color': textColor, 'font-size': textSize }">Styled Text</div>
+
+In ts file:
+textColor = "purple";
+textSize = "50px";
+
+>Conditional Styling:
+---------------------
+<button [style.background-color]="isActive ? 'green' : 'gray'">Toggle</button>
+
+
+*Class binding :
+---------------
+*Class binding in Angular allows you to dynamically apply CSS classes to HTML elements in your templates based on conditions or data from the component class. 
+*This is particularly useful for adding or removing CSS classes to elements to control their appearance or behavior in response to various application states or user interactions. 
+
+
+In .css assume there is a class
+-----------------------------------
+.para1{
+    color:red;
+    font-size: 36px;
+    font-weight: 800;
+}
+
+.para2{
+    color:blue;
+    font-size: 54px;
+    font-weight: 800;
+}
+
+
+In .ts
+-------
+flag = true;
+
+
+In .html:
+--------
+1) Binding a Single CSS Class:
+
+<h1 [class.para1]="flag">Class Binding</h1> //styles of para1 are applied to h1 if flag is true
+
+2) Binding Multiple CSS Classes:
+<h1 [class]={'para1':ispara1, 'para2':ispara2}>Class Binding</h1>
+
+3) Binding based on condition
+<h1 [class]="flag?'para1':'para2'">Class Binding</h1>
+
+
+
+*Attribute binding :
+--------------------
+Sometimes you may need to bind to an HTML attribute that is not represented by a corresponding property in the DOM API (e.g., colspan, aria-* attributes). You can use attr. prefix for this purpose.
+
+
+>When the attribute is not known(native) to the element then use [attr.atribute-name]
+Ex:
+<th [attr.colspan]="colValue">Person</th>
+
+
+*Event Binding
+----------------
+Event binding allows to respond to user interactions or events, such as button clicks, mouse movements, keyboard inputs, and more. It enables you to execute methods or functions defined in your component class when these events occur. It is used to pass data from template to the component.
+
+Ex:
+*Syntax
+<button (click)="handleClick()">Click me</button>
+
+click is an event enclosed within parentheses.
+handleClick() is a function defined in .ts
+
+*Paasing event objects:
+<button (click)="handleClick($event)">Click me</button>
+
+In .ts
+-------
+handleClick(event: MouseEvent) {
+  // Access event properties here
+}
+
+
+2. Two way data Binding:
+------------------------
+Two-way data binding in Angular is a powerful feature that allows automatic synchronization of data between a form control element in the template (such as an input field or a textarea) and a property in the component class. It enables you to both display and update data in real-time without the need for manual event handling.
+
+Two-way data binding is achieved using the [(ngModel)] directive, which combines property binding (to update the value from the component class to the template) and event binding (to update the value from the template to the component class). It's commonly used with form elements to create interactive forms.
+
+For using ngModel, add "import { FormsModule } from '@angular/forms';" in app.module.ts and also include FormsModule in imports.
+
+Ex:
+<input type="text" [(ngModel)]="userName" /> {{userName}}
+
+userName is a property in .ts.
+
+Now, whenever you type or modify the content of the input field in the template, the userName property in the component class will be automatically updated with the same value. Likewise, if you programmatically change the value of userName in the component class, the input field in the template will reflect this change. This real-time synchronization between the template and the component class is the essence of two-way data binding.
+
+Note:
+-----
+Using ngModel requires importing FormsModule from @angular/forms. Import it in app.module.ts and after importing any module, register it in imports: section of @NgModule()
+
+
+
+
+6. Parent-Child Component:
+==========================
+Create 2 component parent and child. put <app-parent></app-parent> in app.component.html, put <app-child></app-child> in parent.component.html.
+
+
+Custom Property/Event Binding: @Input(), @Output()
+-----------------------------------------
+I)Passing data from parent to child component: Custom property Binding & @Input()
+----------------------------------------------------------------------------------
+
+1) Define an Input Property in the Child Component:
+--------------------------------------------------
+Define an input property using the @Input() decorator. This property will be used to receive data from the parent component.
+export class ChildComponent{
+
+  @Input() recievedData!: string;
+
+}
+
+! is the non-null assertion operator. It indicates that a variable or property is non-null and will be initialized at some point.
+
+2) Define data to be passed in parent
+----------------------------------------
+In parent component,
+export class ParentComponent implements  {
+
+  parentData = "Data from the parent";
+
+}
+
+3)Pass Data from Parent to Child Component:
+------------------------------------------
+// Custom property binding
+<app-child [receivedData]="parentData"></app-child>
+
+4)Display it
+-------------
+In child template,
+<h1>{{receivedData}}<h1>
+
+
+II)Passing data from child to parent component
+----------------------------------------------
+2 ways: 1)@ViewChild, @Output
+use @ViewChild when you need to access child components or DOM elements directly within a parent component, and use @Output when you need a child component to communicate with its parent component by emitting custom events.
+
+
+Using @ViewChild()
+
+export class ChildCompent{
+   msgToParent:string = "Message to parent component";
+}
+
+export class ParentComponent implements AfterViewInit{
+   msgFromChild!:string;
+
+   @ViewChild(ChildCompent) childComp:any; //Accessing childcomponent
+
+   ngAfterViewInit(){
+     this.msgFromChild = this.childComp.msgToParent;
+   }
+}
+
+Now u can use msgFromChild in template using interpolation.
+
+
+
+
+Using @Output()
+-----------------
+Data  can be passed from a child component to a parent component by emitting custom events from the child component and handling those events in the parent component. 
+
+1)Create a event emitter in child.ts
+------------------------------------
+@Output is used to create custom event emitter child component.
+Then create a method (sendDataToParent() in this case) that emits the custom event with the data you want to pass.
+
+Note:
+======
+Import EventEmitter from @angular/core not from stream.
+
+
+export class ChildComponent {
+  @Output() childEvent = new EventEmitter<string>();
+
+  sendDataToParent() {
+    const dataToSend = 'Data from Child Component';
+    this.childEvent.emit(dataToSend);
+  }
+}
+
+2)Do event binding in parent template
+--------------------------------------
+<app-child (childEvent)="recieveDataFromChild($event)"></app-child>
+<h1>receivedData</h1>
+
+3) Define the method in parent.ts
+----------------------------------
+export class ParentComponent {
+  receivedData: string = '';
+
+  receiveDataFromChild(data: string) {
+    this.receivedData = data;
+  }
+}
+
+
+7.Directives
+=============
+Directives are instructions to the DOM.
+They allow you to add dynamic behavior and functionality to your templates.
+ngIf, ngFor, ngSwitch, ngClass, ngStyle.
+
+Types of directive:
+1) Component Directives:
+-----------------------
+@Component(). It is a directive with a template.
+
+
+
+1)Structural directive :
+-----------------------
+Structural directives alter the layout of the DOM by adding, removing, or manipulating elements.
+Ex: *ngIf, *ngFor, *ngSwitchCase, *ngSwitchdefault (structural directives starts with *)
+
+
+2)Attribute Directive
+---------------------
+Attribute directives change the appearance or behavior of elements.
+Ex:[ngStyle], [ngClass], [ngSwitch]
+
+1)ngIf: 
+Used for conditional rendering. It adds or removes elements from the DOM based on a condition.
+
+Ex 1:
+<div *ngIf="condition">This element is rendered if 'condition' is true</div>
+
+Ex 2: (<ng-template> can be only used with a structural directive)
+If else:
+<!-- If-else  -->
+<p *ngIf="flag; then ifBlock else elseBlock"></p>
+
+<ng-template #ifBlock>
+    <h3>If condition is executing</h3>
+</ng-template>
+
+<ng-template #elseBlock>
+    <h3>Else condition is executing</h3>
+</ng-template>
+
+Ex 3:
+<!-- If else ladder -->
+<ng-template [ngIf]="color==='red'">
+    <h3 class="text-danger">Red color</h3>
+</ng-template>
+<ng-template [ngIf]="color==='green'">
+    <h3 class="text-success">Green color</h3>
+</ng-template>
+<ng-template [ngIf]="color==='yellow'">
+    <h3 class="text-warning">Yellow color</h3>
+</ng-template>
+
+
+
+2)ngFor: 
+Used for iterating over arrays or lists to create a set of elements.
+
+userDetails = [
+    {name:"John", city:"Texas", phno:['1234', '56678', '767868']},
+    {name:"Jack", city:"Ohio", phno:['1234', '56678', '767868']},
+    {name:"Steve", city:"LA", phno:['1234', '56678', '767868']},
+    {name:"Tony", city:"Vegas", phno:['1234', '56678', '767868']},
+    {name:"Mady", city:"Florida", phno:['1234', '56678', '767868']}
+];
+
+
+<ol *ngFor="let user of userDetails">
+    <li>{{user.name}}</li>
+    <li>{{user.city}}</li>
+    <li>
+      <ul *ngFor="let ph of user.phno">
+        <li>{{ph}}</li>
+      </ul>
+    </li>
+</ol>
+
+
+// i displays the index(index starts from 0)
+<ol *ngFor="let user of userDetails; let i = index">
+    <li>{{i}}</li> 
+    <li>{{user.name}}</li>
+    <li>{{user.city}}</li>
+</ol>
+
+3)ngSwitch:
+<!-- switch case -->
+<div [ngSwitch]="color">
+    <h1 *ngSwitchCase="'red'" class="text-danger">Red color</h1>
+    <h1 *ngSwitchCase="'yellow'" class="text-warning">Yellow color</h1>
+    <h1 *ngSwitchCase="'green'" class="text-success">Green color</h1>
+    <h1 *ngSwitchDefault>Unknown color</h1>
+</div>
+
+4)ngStyle:
+<!-- switch case -->
+<div [ngSwitch]="color">
+    <h1 *ngSwitchCase="'red'" class="text-danger">Red color</h1>
+    <h1 *ngSwitchCase="'yellow'" class="text-warning">Yellow color</h1>
+    <h1 *ngSwitchCase="'green'" class="text-success">Green color</h1>
+    <h1 *ngSwitchDefault>Unknown color</h1>
+</div>
+
+5)ngStyle: 
+Used for dynamically applying inline CSS styles based on conditions.
+
+Ex:
+<h1 [ngStyle]="{'color':'red', 'background-color':'gray'}">This is an example of ngChild</h1>
+
+Ex:
+<h1 [ngStyle]="{'color': aval === 'available' ? 'purple' : 'pink'}"></h1>
+
+6)ngClass:
+Used for dynamically adding or removing CSS classes based on conditions.
+
+<div [ngClass]="{ 'active': isActive, 'error': hasError }">Dynamic Classes</div>
+
+> active and error are classes defined in css.
+> isActive and hasError are boolean variables/expressions.
+
+
+ngStyle and ngClass directives, provides similar functionality using property binding with [style] and [class] bindings in Angular.
+
+Note:
+-----
+We cant use more than one structural directive on same html element. If u want to use more than one, then wrap that element within another div/span and use that directive on that.
+
+
+
+8. Template Reference Variable:
+===============================
+> In Angular, template variables are used to reference elements, components, directives, or values within a template.
+> Template variables are created by prefixing an identifier with a hash symbol (`#`) within the template. 
+
+Here's how they work with some examples:
+
+### 1. Basic Example:
+
+Let's say you have an input field and you want to access its value in your component class. You can use a template variable to achieve this:
+
+<input type="text" #myInput>
+<button (click)="logInputValue(myInput.value)">Log Value</button>
+
+
+In the component class:
+export class ExampleComponent {
+  logInputValue(value: string) {
+    console.log(value);
+  }
+}
+
+
+### 2. Reference to Components or Directives:
+
+You can also use template variables to reference components or directives within the template:
+
+<app-child #childComponent></app-child>
+<button (click)="childComponent.doSomething()">Invoke Method</button>
+
+
+### 3. ngModel with Template Variable:
+
+Template variables are often used with `ngModel` to access the value of form inputs:
+
+<input type="text" [(ngModel)]="username" #usernameInput>
+<button (click)="logUsername(usernameInput.value)">Log Username</button>
+
+
+### 4. Accessing DOM Elements:
+
+You can access DOM elements and their properties using template variables:
+
+<div #myDiv></div>
+<button (click)="myDiv.style.backgroundColor = 'red'">Change Color</button>
+
+
+### 5. ViewChild and Template Variables:
+
+You can combine template variables with `@ViewChild` decorator to access child components or DOM elements in the component class:
+
+<app-child-component #childComponent></app-child-component>
+
+In the component class:
+export class ParentComponent {
+  @ViewChild('childComponent') childComponent: ChildComponent;
+
+  ngAfterViewInit() {
+    // You can access methods or properties of the child component here
+    this.childComponent.doSomething();
+  }
+}
+
+### Note:
+- Template variables are local to the template in which they are defined.
+- They cant be used in component class, unless they are passed to component by any events or by using @ViewChild
+- Avoid using the same template variable name multiple times within the same template.
+- Template variables can be used in event bindings, property bindings, and structural directives like `*ngIf`, `*ngFor`, etc.
+
+
+
+9. @ViewChild() in Angular
+===========================
+In Angular, @ViewChild is a decorator used to query and access child elements or components in the template of a parent component. It allows you to get a reference to a specific child element or component so that you can interact with it programmatically. 
+
+Note:
+@Input() is used for passing data from parent to child components, establishing a unidirectional data flow. @ViewChild is used for accessing and interacting with child elements or components in the template from the parent component's class. They serve different purposes and are not alternatives to each other.
+
+> Used for accessing data directly from child component.
+> Used for accessing data from its template.
+
+Ex: Accessing data from its template.
+app.component.html
+------------------
+DOB: <input type="date" #dobInput>
+Age: <input type="text" #ageInput>
+
+app.component.ts
+-----------------
+@ViewChild('dobInput') dob : ElementRef; //ElementRef -> dobInput is getting reference of HTML element
+@ViewChild('ageInput') age : ElementRef;	
+
+calculateAge(){
+let birthYear = new Date(this.dob.nativeElement.value).getFullYear();
+let curYear = new Date().getFullYear();
+let age = curYear - birthYear;
+this.age.nativeElement.value = age;
+}
+
+Let Demo be the child component of App.
+In demo.component.ts
+----------------------
+sayHello(){
+cns.log("Helo from Demo compo");
+}
+
+Ex1: Accessing data directly from child component
+Accessing Demo component properties in parent component(App)
+app.component.ts
+-----------------
+@ViewChild(DemoComponent, {static:true}) demoComp: DemoComponent;
+
+app.component.html
+-------------------
+<app-demo></app-demo>
+
+{{demoComp.sayHello()}}
+
+
+Ex2:
+export class ChildCompent{
+   msgToParent:string = "Message to parent component";
+}
+
+export class ParentComponent implements AfterViewInit{
+   msgFromChild!:string;
+
+   @ViewChild(ChildCompent) childComp:any; //Accessing childcomponent
+
+   ngAfterViewInit(){
+     this.msgFromChild = this.childComp.msgToParent;
+   }
+}
+
+> It has 3 parameters
+
+@ViewChild(selector: string | Function | ProviderToken, opts?: {read, static})
+
+1. selector:
+> String: It represents a CSS selector that identifies the element, component, or directive you want to query for.
+> Function: It represents a component type, directive type, or element type you want to query for.
+> ProviderToken<unknown>: It represents a provider token used to query for a service instance.
+
+Ex:
+@ViewChild('myDiv') myDiv: ElementRef; // Using a string selector
+@ViewChild(MyDirective) myDirective: MyDirective; // Using a directive type as selector
+@ViewChild(MyComponent) myComponent: MyComponent; // Using a component type as selector
+
+2. static: 
+> It specifies whether the query should be executed statically or dynamically.
+> If static is set to true, the query will be executed at component construction time (like in the constructor). This means that the query will be executed before ngAfterViewInit, and you'll be able to access the queried value in the ngOnInit lifecycle hook.
+> If static is set to false or omitted, the query will be executed dynamically, and you'll be able to access the queried value in the ngAfterViewInit lifecycle hook.
+Note that the default value for static is false if not specified.
+
+Ex:
+@ViewChild('myDiv', { static: true }) myDivStatic: ElementRef; // Execute statically
+
+3. read: 
+> It specifies the token that should be used to read the queried value. 
+> For example, if you're querying for an ElementRef but you want to read it as a different type, you can specify that type using the read option.
+
+Ex;
+@ViewChild('myCustomElement') myCustomElement: MyCustomElement; // Querying for MyCustomElement component
+
+// Reading as ElementRef instead of MyCustomElement
+@ViewChild('myCustomElement', { read: ElementRef }) myCustomElementAsElementRef: ElementRef;
+
+
+
+9.1 @ViewChildren() in angular:
+===============================
+> `@ViewChildren` is similar to `@ViewChild`, but instead of querying for a single element, component, or directive, it queries for multiple elements, components, or directives that match the given selector.
+> It returns a `QueryList` of elements, components, or directives that match the selector. Here's an example to illustrate its usage:
+
+Suppose you have a parent component with multiple child components of type `ChildComponent`.
+
+@Component({
+  selector: 'app-parent',
+  template: `
+    <app-child></app-child>
+    <app-child></app-child>
+    <app-child></app-child>`
+  
+})
+
+export class ParentComponent {
+  @ViewChildren(ChildComponent) children: QueryList<ChildComponent>;
+
+  ngAfterViewInit() {
+    // Accessing child components after the view is initialized
+    this.children.forEach(child => {
+      console.log(child);
+      child.doSomething(); // Assuming ChildComponent has a method doSomething()
+    });
+  }
+}
+
+This allows you to interact with multiple instances of child components or elements in your template from the parent component.
+
+
+10. View Encapsulation:
+=======================
+Its a concept or behaviour in angular, where component's css styles are encapsulated into component's view and do not affect rest of the application.
+
+Since components co-exist in angular, it avoids overriding of once component's css with another. The styles of parent overrides styles of child component.
+
+View Encapsulation provides three modes:
+
+1)Emulated (default): 
+This is the default mode for View Encapsulation in Angular. In this mode, Angular emulates shadow DOM behavior by appending a unique attribute to each component's HTML elements and generating corresponding CSS selectors that include this attribute. This ensures that styles defined in the component's stylesheet only affect the component's view and do not leak out to other parts of the application.
+
+2)Shadow DOM: 
+This mode uses the native Shadow DOM feature provided by modern browsers. It encapsulates the styles and DOM of a component, similar to the Emulated mode but using the browser's native Shadow DOM implementation. Shadow DOM is not supported in all browsers, so Angular provides emulation for broader compatibility.
+
+3)None: 
+In this mode, there is no View Encapsulation, and styles defined in a component's stylesheet are applied globally to the entire application. This mode should be used sparingly, as it can lead to unintended side effects when styles clash with other parts of the application.
+
+Where to specify?
+In component.ts
+@Component({
+selector: ...,
+.
+.
+.
+encapsulation:ViewEncapsulation.None / ViewEncapsulation.ShadowDom
+
+})
+
+
+11. Content Projection :
+=======================
+In Angular, ng-content is a feature that allows you to project content from a parent component's template into a child component's template. It enables you to create flexible and reusable components by passing content (such as text, HTML, or other components) from the parent to the child component. This is often referred to as content projection or transclusion.
+
+Ex:
+parent template
+----------------
+<p>parent component works!</p>
+<app-child>
+  <p>This content is projected into the child component.</p>
+  <p>Both are rendered</p>
+</app-child>
+
+If <ng-content> not used, in child component then the content within <app-child> is ignored.
+
+
+Child template
+--------------
+<div class="child-box">
+  <h2>Child Component</h2>
+  <ng-content></ng-content> // The content within <app-child></app-child> will be rendered in place of ng-content.
+</div>
+
+i.e In the child component template, ng-content acts as a placeholder where the content from the parent component will be inserted.
+
+
+The final rendered HTML will look like this:
+<div class="child-box">
+  <h2>Child Component</h2>
+  <p>This content is projected into the child component.</p>
+  <p>Both are rendered</p>
+</div>
+
+
+
+Note:
+-----
+you can use ng-content based on the class of the projected content to selectively render content in the child component.
+
+
+parent template
+----------------
+<app-child>
+  <p class="head">This is an important message.</p>
+  <p class="foot">This is a regular message.</p>
+</app-child>
+
+
+Child template
+--------------
+<div class="child-box">
+  <ng-content select=".head"></ng-content>
+  <h2>Child Component</h2>
+  <ng-content select=".foot"></ng-content>
+</div>
+
+
+12. @ContentChild() :
+====================
+It allows you to access and interact with the content that is projected into a component using <ng-content></ng-content>. @ContentChild is often used when you want to work with specific projected content within a component.
+
+Ex:
+parent template
+----------------
+<app-child>
+  <p #mypara>This is a regular message.</p>
+</app-child>
+
+
+child ts
+---------
+@ContentChild('mypara') pa: ElementRef;
+
+ngAfterContentInit(){
+this.pa.nativeElement.textContent = "This is a new regular message."
+}
+
+child template
+--------------
+<ng-content></ng-content>
+
+
+> If you want to access projected content in the parent compnnet itself, we can use @ViewChild as usaual.
+Ex:
+parent ts:
+@ViewChild('mypara') pa: ElementRef;
+
+> You can also project a component.
+Ex:
+
+parent html:
+------------
+<app-child>
+  <p #mypara>This is a regular message.</p>
+  <app-test></app-test>
+</app-child>
+
+
+child html:
+----------
+<ng-content></ng-content>
+
+child ts:
+---------
+@ViewChild('TestComponent') testComp: TestComponent; // Accessing projetced component.
+
+
+12.1 @ContentChildren() :
+----------------------------
+<app-child>
+  <p #mypara>This is a first message.</p>
+  <p #mypara>This is a second message.</p>
+  <p #mypara>This is a third message.</p>
+</app-child>
+
+When u access it in child ts,
+@ContentChild('mypara') pa: ElementRef; // It returns reference of only first matcing element. Not all elements.
+
+Thats when @ContentChildren() comes into picture.
+
+In child.ts.
+@ContentChildren('mypara') paElms: QueryList<ElementRef>;
+
+showParas() {
+	this.paElms.forEach(paElm => console.log(this.paElm.nativeElement.value));
+}
+
+
+
+13. Services:
+=============
+command: ng g s Services/service-name
+
+Service is a functionality, that allows to share the same data across multiple components regardless of any relationship(Parent-child). Used for tasks like data retrieval, business logic, and communication with external APIs.
+
+Services are commonly used to encapsulate HTTP requests and handle data retrieval and manipulation from backend APIs.
+
+@Injectable makes services singletons, meaning Angular creates only one instance of a service during the lifetime of an application. This ensures that components that inject the service get access to the same instance.
+
+Step1 : Creating a service
+
+ng g s Services/user
+
+This command will create 2 files within Services folder.
+1.user.service.spec.ts
+2.user.service.ts
+
+In user.service.ts
+-------------------
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+
+@Injectable({
+  providedIn: 'root'
+})
+
+export class AssignService {
+
+  constructor(private http:HttpClient) { }
+
+  //Getting Product Details
+  getProductData(){
+    return this.http.get("https://p-9x7e.onrender.com/products/products");
+  }
+
+  getUserData(){
+    return this.http.get("https://jsonplaceholder.typicode.com/users");
+  }
+}
+
+> We use the @Injectable decorator to indicate that this class is an injectable service.
+> We register the service at the root level using providedIn: 'root', which makes it a singleton service that can be injected throughout the application.
+
+
+Step2: Use the service in a acomponent
+
+import { Component, OnInit } from '@angular/core';
+import { UserService } from 'src/app/Services/user.service';
+
+@Component({
+  selector: 'app-userdetail',
+  templateUrl: './userdetail.component.html',
+  styleUrls: ['./userdetail.component.css']
+})
+
+export class UserdetailComponent implements OnInit {
+  result:any;
+  
+  //Dependency Injection
+  constructor(private users:UserService) { }
+
+  ngOnInit(): void {
+    this.users.getUserData().subscribe((data)=>{
+      console.log(data);
+      this.result = data;
+    });
+  }
+
+}
+
+
+Note:
+------
+import { HttpClientModule } from '@angular/common/http'; and add HttpClientModule in imports of app.module.ts.
+
+Use JSonPlaceholder website for free fake apis.
+
+
+14. Observables :
+================
+An Observable in Angular is a data stream that allows you to work with asynchronous data and events. Observables are a core part of the RxJS (Reactive Extensions for JavaScript) library, which is used for handling reactive and asynchronous programming in Angular applications. Observables can represent a single value, a collection of values, or a sequence of events over time.
+
+Step1: Creating an Observable
+
+import { Observable } from 'rxjs';
+
+const myObservable = new Observable(observer => {
+  // Emit values
+  observer.next('Hello');
+  observer.next('World');
+
+  // Simulate an error
+  // observer.error('An error occurred');
+
+  // Emit another value
+  observer.next('Angular');
+
+  // Emit another value after some time
+  setTimeOut(()=>{observer.next('Angular')}, 1000);
+
+  // Indicate that the observable is done
+  observer.complete();
+});
+
+
+Step2: Subscribe to Observable in order to get the data
+
+// Subscribe to the observable
+//It takes 3 callback functions which are optional
+
+myObservable.subscribe(
+  value => console.log(value), // Next handler
+  error => console.error(error), // Error handler
+  () => console.log('Observable completed') // Complete handler
+);
+
+
+
+Another Way:
+------------
+In Angular and RxJS, you can create an Observable using the of operator from the rxjs library. The of operator allows you to emit one or more values synchronously and then complete the Observable. It's commonly used when you want to create an Observable from a set of predefined values.
+
+
+import { of } from 'rxjs';
+
+arr1 = [1, 2, 3]
+
+// Create an Observable that emits values synchronously
+const myObservable = of('Hello', 'World', 'Angular', this.arr1, 9);
+
+// Subscribe to the Observable to handle emitted values
+myObservable.subscribe(
+  value => console.log(value),
+  error => console.error(error),
+  () => console.log('Observable completed')
+);
+
+
+
+15. Routing :
+============
+Routing in Angular refers to the mechanism for navigating between different views or components in a single-page application (SPA). Angular's routing module allows you to create routes and map them to specific components, enabling navigation within your application without full page reloads. 
+
+1. Set Routes :
+----------------
+In app-routing.module.ts,
+
+const routes: Routes = [
+  {path:"", component:HomeComponent} //For root URL -> Displays HomeComponent
+  {path:"home", component:HomeComponent}
+  {path:"products", component:ProductsDetailComponent},
+  {path:"add-product", component:AddProductComponent},
+  {path:"**", component:ErrorComponent} //If wrong URL entered then display Errorcomponent.
+];
+
+Note:
+-----
+{path:"**", component:ErrorComponent}
+This path must be at last line.
+
+
+2. Router Outlet:
+------------------
+Add
+<router-outlet></router-outlet>
+in app.component.html
+
+3. Linking to html
+------------------
+<nav>
+ <ol>
+   <li><a routerLink="home">Home</a></li>
+   <li><a routerLink="about">About</a></li>
+   <li><a routerLink="products">Products</a></li>
+ </ol>
+<nav>
+
+The path provided within routerLink must match with that of path provided in app-routing.module.ts.
+
+4.Styling active link
+----------------------
+In css, 
+.active{
+ background-color:gray;
+}
+
+<nav>
+ <ol>
+   <li routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"><a routerLink="">Home</a></li>
+   <li routerLinkActive="active"><a routerLink="about">About</a></li>
+   <li routerLinkActive="active"><a routerLink="products">Products</a></li>
+ </ol>
+<nav>
+
+
+5. Absolute Path : (Adding a slash)
+-----------------
+<li><a routerLink="/home">Home</a></li>efault it uses Absolute path
+
+
+6. Navigate between routes programatically
+-------------------------------------------
+import { Component, OnInit } from '@angular/core';
+import { ProductsService } from '../Services/products.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NgForm } from '@angular/forms';
+
+@Component({
+  selector: 'app-edit-product',
+  templateUrl: './edit-product.component.html',
+  styleUrls: ['./edit-product.component.css']
+})
+export class EditProductComponent implements OnInit {
+
+  result:any;
+  selectedProduct:any;
+  
+  constructor(private router:Router) { }
+
+  //It can be a click event function
+  editProduct(){
+      this.router.navigate(['products']); //By d
+  });
+
+  }
+
+}
+
+7. Passing Parameters to Routes :
+--------------------------------
+* In your route configuration, specify the route path with a parameter placeholder. Parameter placeholders are denoted by : followed by a parameter name.
+Ex:
+{ path: 'product/:id', component: ProductDetailComponent }
+
+In this example, :id is a parameter that will be replaced with the actual value when navigating to the route.
+
+*In your template, create a link that includes the parameter value. You can use routerLink to generate the link dynamically.
+<a [routerLink]="'/product/' + productId">Product Details</a>
+
+*Retrieve Parameters in the Target Component:
+export class ProductDetailComponent implements OnInit {
+  productId: string;
+
+  constructor(private route: ActivatedRoute) {}
+
+  ngOnInit() {
+    // Retrieve the parameter value from the route
+    this.productId = this.route.snapshot.paramMap.get('id');
+  }
+}
+
+
+8. Using Routes for different Module
+--------------------------------------
+2 Modules-> ProductDashboard, UserDashboard
+
+ProductDashboard has ProductDetailComponent and UserDashboard has UserDetailComponent.
+
+In app-routing.module.ts,
+
+const routes: Routes = [
+  {path:"home", component:HomeComponent},
+  {path:"about", component:AboutComponent},
+  //Giving route for module
+  {path:"product", loadChildren:()=>import('./productdashboard/productdashboard.module').then(m => m.ProductdashboardModule)},
+  {path:"user", loadChildren:()=>import('./userdashboard/userdashboard.module').then(m => m.UserdashboardModule)}
+];
+
+
+In ProductDashboard.module.ts,
+
+@NgModule({
+  declarations: [
+    ProductdetailComponent
+  ],
+  imports: [
+    CommonModule,
+    RouterModule.forChild(
+      [
+        {path:"product-detail", component:ProductdetailComponent},
+      ]
+    )
+  ]
+})
+
+|||ly in UserDashboard.module.ts
+
+
+In app.component.html,
+
+<li class="nav-item">
+     <a class="nav-link" aria-current="page" routerLink="product/product-detail" href="#">Product Detail</a>
+</li>
+
+<li class="nav-item">
+     <a class="nav-link" aria-current="page" routerLink="user/user-detail" href="#">User Detail</a>
+</li>
+
+
+
+
+16. Route Guards :
+=================
+Route guards in Angular are mechanisms that allow you to control and protect the navigation to specific routes in your application. They are used to enforce access restrictions, perform authentication checks, and execute other logic before allowing or denying access to certain parts of your application. 
+
+There are several types of route guards in Angular:
+
+1. CanActivate: This guard determines whether a route can be activated. It is used to protect routes based on certain conditions, such as user authentication. If CanActivate returns true, navigation is allowed; otherwise, it is blocked.
+
+2. CanActivateChild: Similar to CanActivate, but specifically designed to protect child routes when a parent route is activated. It checks whether the child routes can be activated based on certain conditions.
+
+3. CanDeactivate: This guard determines whether a route can be deactivated, typically used for confirmation dialogs or preventing navigation if unsaved changes exist. If CanDeactivate returns true, navigation is allowed; otherwise, it is blocked.
+
+4. Resolve: The resolve guard is used to fetch data asynchronously before activating a route. It ensures that required data is available before navigating to a route. Once the data is resolved, the route is activated.
+
+5. CanLoad: This guard is used to prevent the lazy loading of feature modules. It checks whether a module can be loaded based on certain conditions, such as authentication. If CanLoad returns true, the module can be loaded; otherwise, it is blocked.
+
+
+Command to generate a guard :
+----------------------------
+ng g guard guard_name
+
+It gives 4 options. Enter space to select one.
+
+//Default generated code.
+
+export class RouteguardGuard implements CanActivate, CanActivateChild, CanDeactivate<unknown>, CanLoad {
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+    return true;
+  }
+  canActivateChild(
+    childRoute: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+    return true;
+  }
+  canDeactivate(
+    component: unknown,
+    currentRoute: ActivatedRouteSnapshot,
+    currentState: RouterStateSnapshot,
+    nextState?: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+    return true;
+  }
+  canLoad(
+    route: Route,
+    segments: UrlSegment[]): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+    return true;
+  }
+} 
+
+Ex:
+
+1. Using CanActivate :
+---------------------
+export class RouteguardGuard implements CanActivate {
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+    return true;
+  }
+} 
+
+
+Applying it in app-routing.module.ts
+
+const routes: Routes = [
+  {path:"home", component:HomeComponent}
+  {path:"products", component:ProductsDetailComponent},
+  {path:"add-product", component:AddProductComponent, canActivate:[RouteguardGuard]},
+  {path:"**", component:ErrorComponent}
+];
+
+
+2. Using CanDeactivate :
+---------------------
+
+export interface CanDeactivateComponent {
+  canDeactivate: () => boolean | Observable<boolean>;
+}
+
+export class EditUserComponent implements CanDeactivate<CanDeactivateComponent> {
+  canDeactivate(): boolean {
+    // Check if there are unsaved changes
+    if (this.hasUnsavedChanges()) {
+      return window.confirm('You have unsaved changes. Do you really want to leave?');
+    }
+    return true; // Allow deactivation
+  }
+
+  private hasUnsavedChanges(): boolean {
+    // Add logic to check for unsaved changes in your form
+    return true; // Replace with your logic
+  }
+}
+
+
+
+17. Pipes :
+==========
+In Angular, pipes are a feature that allows you to transform or format data for display in templates. Pipes are essentially functions that take an input value, apply some transformation or formatting, and then return the transformed value for rendering in the template. 
+
+1. Using Built-in Pipes
+------------------------
+{{ expression | pipeName }}
+
+<p>{{ name | upperCase }}</p>
+<p>{{ currentDate | date: 'short' }}</p>
+
+Search for more pipes: angular.io > References > API References > Serach Pipes in textbox.
+
+
+2. Chaining Pipes:
+------------------
+<p>{{ currentDate | date: 'short' | capitalize }}</p>
+
+
+3. Custom Pipes :
+----------------
+ng g p pipe-name
+
+Ex:
+ng g p capitalize
+
+This will create 2 files.
+1. capitalize.pipe.ts
+2. capitalize.pipe.spec.ts
+
+capitalize.pipe.ts
+------------------
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'capitalize'
+})
+export class CapitalizePipe implements PipeTransform {
+
+  transform(value: string): string {
+     if (!value) return value;
+
+     return value.charAt(0).toUpperCase() + value.slice(1);
+  }
+}
+
+Register this pipe CapitalizePipe in app.module.ts.(No need if that pipe is created using CLI)
+
+
+Pure and Impure Pipes:
+----------------------
+Pure pipes are the default type of pipe, and they are designed to be "pure" functions, meaning they should not have any side effects and should always produce the same output for the same input. When you create a custom pipe without specifying its type, it is considered a pure pipe.
+
+Impure pipes are used for operations that may have side effects or that depend on asynchronous data and need to be re-evaluated on each change detection cycle.
+
+In summary, pure pipes in Angular are stateless and should produce consistent results for the same input. They are suitable for simple data transformation and formatting tasks where caching the result is not necessary. For more complex scenarios or when dealing with asynchronous data, you may consider using impure pipes or other techniques like Observables and the async pipe.
+
+
+Async Pipes :
+-------------
+The async pipe in Angular is used to handle asynchronous data streams, such as Observables and Promises, directly in your template. It subscribes to an asynchronous data source, automatically handles the subscription and unsubscription, and updates the view whenever new data is emitted or the asynchronous operation is completed. This simplifies the management of asynchronous data in your templates.
+
+
+18. Events in angular:
+=======================
+For clicking we have 'click' event. For pressing key, we have 'keyup' event.
+
+Using keyup event to capture text entered in a inputfield:
+1)
+in .html
+<input type="text" (keyup.enter)="getText($event)">
+
+in .ts
+getText($event: any): void{
+    console.log($event.target.value);
+}
+
+2)
+Using template variables
+<input type="text" (keyup.enter)="getText(someText.value)" #someText>
+
+
+getText(text:any): void{
+    console.log(text);
+}
+
+3)
+Using ngModel
+
+in .html
+<input type="text" [(ngModel)]="text" (keyup.enter)="getText()"> // Here we are calling the function after pressing enter
+
+in .ts
+text!:string;
+
+getText(): void{
+ console.log(this.text);
+}
+
+
+19. Automatic Change Detection in Angular
+==========================================
+1)Initialization: When a component is created, Angular initializes the component's view based on the initial state of the component's data.
+
+2)Rendering the View: Angular renders the view based on the initial data provided by the component.
+
+3)Change Detection Cycle: Angular sets up a continuous process called the Change Detection Cycle. This cycle is triggered by various events such as user interactions, timers, or asynchronous operations.
+
+4)Change Detection Process: During each cycle, Angular performs the following steps:
+
+a. Traverse Component Tree: Angular traverses the component tree starting from the root component to the leaf components.
+
+b. Check for Changes: For each component in the tree, Angular compares the current state of the component's data (model) with its previous state. This comparison is performed using a mechanism called Zone.js, which intercepts asynchronous operations and triggers change detection when necessary.
+
+c. Update View: If Angular detects changes in the component's data, it updates the corresponding part of the view to reflect these changes. This process is called "Dirty Checking."
+
+d. Propagation: After updating the view of the current component, Angular propagates the change detection process to its child components, triggering the same cycle for them.
+
+5)Optimization: Angular employs various optimization techniques to improve the performance of change detection. For example, it uses Change Detection Strategy (OnPush) to reduce the number of components checked during change detection.
+
+6)Completion: Once the change detection cycle is completed, Angular waits for the next trigger event to start the cycle again
+
+
+
+20. InBuilt Pipes in Angular
+==================================
+1)Uppercase : {{data | uppercase}}
+
+2)Lowercase : {{data | lowercase}}
+
+
+data = 7987979
+3) Number: {{data | number}} o/p = 7,987,979
+
+4) Currency: {{ data | currency}} o/p = $7,987,979.00
+
+ we can also pass different currency format:
+ {{ data | currency: "JPY"}} o/p = ¥7,987,979
+ 
+5) Date pipe 
+{{ data | date}}
+
+Also can pass parameters:
+{{ data | date:"short"}}, other parameters are shortDate, shortTime etc.
+
+6) Json Pipe
+{{data | json}} => shows object in json format
+
+7) Percent pipe
+data:any = 0.12;
+{{data | percent}} => 12% (It multiplies by 100)
+
+8) Slice pipe
+data = [10, 20, 30, 40, 50]
+
+{{data | slice : start:end(end is exclusive)}}
+
+Ex: {{data | slice: 1:4}} => 20, 30, 40
+
+9) Custom pipe
+
+ng g p Pipes/append 
+
+It will create a file named append.pipe.ts within Pipes folder.
+
+That file contains a class AppendPipe that implements PipeTransform.
+
+We need to override transform method.
+
+Ex: 
+transform(text:string): string{
+	return `City Name: ${text}`;
+}
+
+
+data = 'Tokyo';
+{{data | append}} O/p=> City Name:Tokyo
+
+
+10) Custom Pipe with arguments
+
+Example of a summary pipe, which only gives specified number of characters from given text
+
+transform(text, length?) {
+  return text.substring(0, length);
+}
+
+Note:
+U can also chain different pipes:
+
+Ex: {{data | append | uppercase}}
+
+
+21. Interfaces in angular
+=============================
+ng g i <folder_name>/<interface_name>
+
+Interfaces in Angular are used to define the structure of objects. They provide a way to enforce a specific shape or contract for the objects used within the application. It is also used for type checking during development.
+
+syntax:
+interface MyInterface {
+  property1: string;
+  property2: number;
+  method1(): void;             //Methods
+  optionalProp?: string;   // Optional property (specified using ?)
+  readonly roProp: string; // Readonly property (specified using readonly)
+}
+
+> Interfaces can extend other interfaces to inherit their properties and methods.
+interface ChildInterface extends ParentInterface {
+  additionalProperty: number;
+}
+
+>Classes in Angular can implement interfaces, ensuring that they adhere to the structure defined by the interface.
+class MyClass implements MyInterface {
+  property1: string;
+  property2: number;
+
+  method1(): void {
+    // Method implementation
+  }
+}
+
+
+22. Forms in Angular
+============================
+2 type of forms in angular.
+1. Template driven forms
+2. Reactive forms
+
+
+1. Template Driven form:
+
+Template-driven forms in Angular are a way of handling form inputs and validations directly in the template (HTML) file, using Angular directives and two-way data binding.
+
+1. **Purpose**: Template-driven forms are primarily used for building simple forms with minimal setup and boilerplate code.
+
+2. **Directives**: Angular provides several directives to facilitate template-driven forms:
+   - `ngForm`: Marks the HTML form element as an Angular form.
+   - `ngModel`: Binds an input, select, or textarea element to a property on the component's class and provides two-way data binding.
+
+3. **ngModel Syntax**: The `ngModel` directive is used within form controls to bind input values to component properties. Syntax:
+   ```html
+   <input [(ngModel)]="propertyName" name="inputName" />
+   
+   Note: Provideing name attribute is mandatory when ngModel is used.
+   
+   
+   **ngForm Syntax**: is applied to the HTML <form> element to declare it as an Angular form. It allows Angular to track the form and its controls, manage form states, handle submission, and provide access to form-related functionalities.
+   <form #myForm="ngForm" (ngSubmit)="onSubmit(myForm)">
+		<!-- Form controls -->
+   </form>
+   
+
+
+4. **Form Submission**: Template-driven forms handle form submission using Angular's event binding and the `ngSubmit` directive:
+   ```html
+   <form (ngSubmit)="onSubmit()">
+   ```
+
+5. **Validation**: Template-driven forms support both built-in and custom validation using HTML attributes and Angular directives. Built-in validation includes `required`, `min`, `max`, `pattern`, etc.
+   ```html
+   <input [(ngModel)]="propertyName" name="inputName" required />
+   <div *ngIf="propertyName.invalid && (propertyName.dirty || propertyName.touched)">
+     <div *ngIf="propertyName.errors.required">Field is required.</div>
+   </div>
+   ```
+
+6. **Form States**: Template-driven forms provide access to different form states such as `pristine`, `dirty`, `valid`, `invalid`, `touched`, `untouched`, etc., which can be used to conditionally display validation messages or apply styles.
+
+7. **Handling Form Submission**: Form submission is typically handled in the component class. Access to form data is achieved through template variables (`#formVar`) or using Angular's `ngModel` two-way data binding.
+
+8. **Benefits**:
+   - Simplified syntax: Template-driven forms rely on HTML attributes and directives, making them easier to understand and write, especially for developers familiar with HTML.
+   - Quick setup: Suitable for small to medium-sized forms where complex form logic or dynamic form controls are not required.
+   - Less boilerplate: Template-driven forms reduce the amount of code needed to set up and manage forms compared to reactive forms.
+
+9. **Limitations**:
+   - Limited flexibility: Template-driven forms can become difficult to manage for large or complex forms due to the lack of explicit form control instances.
+   - Testing: Testing template-driven forms can be more challenging compared to reactive forms, as validation and form logic are defined within the template.
+
+10. **Use Cases**: Template-driven forms are suitable for simple forms such as login forms, contact forms, or forms with a fixed set of fields and straightforward validation requirements.
+
+11. **Migration**: Angular provides tools for migrating template-driven forms to reactive forms if the complexity of the form increases or if more control is needed over form validation and handling.
+
+
+Ex: Form creation, validation and data retrival:
+
+<div class="col-md-6" style="margin: auto">
+  <form #contactForm="ngForm" (ngSubmit)="submitForm(contactForm)">
+    <div class="mb-3">
+      <label for="exampleInputName" class="form-label">First Name</label>
+      <input
+        type="text"
+        class="form-control"
+        id="exampleInputName"
+        name="FirstName"
+        ngModel
+        #fname="ngModel"
+        required
+        minlength="3"
+        maxlength="20"
+      />
+    </div>
+    <p *ngIf="fname.touched && fname.invalid" class="text-danger">Invalid Name</p> //Form validation
+
+    <div class="mb-3">
+      <label for="exampleInputEmail1" class="form-label">Email address</label>
+      <input
+        type="email"
+        class="form-control"
+        id="exampleInputEmail1"
+        aria-describedby="emailHelp"
+        name="Email"
+        ngModel
+        #email="ngModel"
+        required
+        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+      />
+    </div>
+    <p *ngIf="email.touched && email.invalid" class="text-danger">Invalid Email</p>
+
+    <div class="form-floating">
+      <label for="floatingTextarea2" class="form-label">Address</label>
+      <textarea
+        class="form-control"
+        placeholder="Leave a comment here"
+        id="floatingTextarea2"
+        style="height: 100px"
+        name="Address"
+        ngModel
+        #address="ngModel"
+        required
+      >
+      </textarea>
+    </div>
+
+    <p *ngIf="address.touched && address.invalid" class="text-danger">Invalid Address</p>
+
+    <button
+      type="submit"
+      class="btn btn-primary mt-3"
+      [disabled]="contactForm.invalid"
+    >
+      Submit
+    </button>
+  </form>
+</div>
+
+
+ <div class="col-md-5 mt-3" style="margin:auto" *ngIf="formSubmitted">
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title">{{userDetail.FirstName}}</h5> //FirstName is the name attribute given to that input tag
+          <h6 class="card-subtitle mb-2 text-body-secondary">{{userDetail.Email}}</h6>
+          <p class="card-text">{{userDetail.Address}}</p>
+        </div>
+    </div>
+ </div>
+ 
+ 
+ .ts
+ ----
+ export class FirstComponent {
+
+  userDetail:any;
+  formSubmitted:boolean = false;
+
+  submitForm(form:NgForm){
+    this.userDetail = form.value;
+    this.formSubmitted = true;
+  }
+}
+
+
+2. Reactive forms
+--------------------
+Reactive forms and template-driven forms are two approaches provided by Angular for working with forms in Angular applications. Here's a brief comparison between the two:
+
+1. **Template-Driven Forms**:
+   - Template-driven forms rely heavily on directives in the template to set up the form logic. This includes directives like `ngModel` for two-way data binding and `ngForm` for form handling.
+   - Form logic and validation rules are primarily defined in the template HTML file.
+   - They are typically easier to set up and use for simple forms.
+   - Ideal for small to medium-sized forms with straightforward validation requirements.
+   - They are suitable for quick prototypes or simple forms where the data flow is simpler.
+
+2. **Reactive Forms**:
+   - Reactive forms are model-driven forms where the form structure and validation logic are defined programmatically in the component class using TypeScript.
+   - Reactive forms use the `FormGroup`, `FormControl`, and `FormBuilder` classes to create and manage forms and form controls.
+   - They provide a more explicit and centralized approach to managing form data and validation rules.
+   - Suitable for complex forms with dynamic validation requirements or forms that require extensive form manipulation and interaction.
+   - Offers better support for unit testing as the form logic is encapsulated within the component class.
+   - Reactive forms provide better support for complex form scenarios such as asynchronous validation, dynamic forms, and nested forms.
+
+In summary, while both template-driven and reactive forms have their use cases, reactive forms are often preferred for larger, more complex forms where flexibility, control, and testability are important considerations.
+
+
+Note:
+-----
+> In Angular, when using reactive forms, it's a common practice to assign an instance to a FormGroup within the constructor. However, it's generally recommended to initialize form related properties and values within the ngOnInit() lifecycle hook rather than the constructor.
+> Constructors should ideally be used for simple initialization tasks, such as injecting dependencies and initializing class properties. 
+> By initializing the form in ngOnInit(), you ensure that the form-related logic is executed only when the component is fully initialized and ready to interact with the DOM.
+
+
+Angular CSS Classes:
+--------------------
+valid, invalid, touched, pristine, dirty etc. These are the some common css classes associated with form.
+
+pristine - the control is in its initial state(User havent changed anything yet)
+dirty - opposite of pristine.
+
+We can use these classes to apply style to elements.
+Ex:
+
+input.ng-invalid.ng-touched { // It means if input tag has both ng-invalid and ng-touched class, then apply this style.
+	border: 1px solid red;
+}
+
+
+Example of a reactive form:
+---------------------------
+
+export class FirstComponent implements OnInit {
+
+  reactiveForm!:FormGroup;
+
+  ngOnInit(): void {
+	//Creating a formgroup and formcontrol object
+    this.reactiveForm = new FormGroup({
+      firstName: new FormControl('', [Validators.required, Validators.minLength(3)]), //Used for validation. If more than 1 validators then enclose it in an array.
+      email:new FormControl('', [Validators.required, Validators.email]),
+      address:new FormControl('', Validators.required)
+    });
+  }
+
+  submitForm() {
+    console.log(this.reactiveForm);
+  }
+}
+
+
+<div class="col-md-6" style="margin: auto">
+
+  // Here we are using formGroup directive and initializing with formGroup object created in component. In ngSubmit no need to pass any args.
+  <form [formGroup]="reactiveForm" (ngSubmit)="submitForm()">
+    <div class="mb-3">
+      <label for="exampleInputName" class="form-label">First Name</label>
+      <input
+        type="text"
+        class="form-control"
+        id="exampleInputName"
+        name="FirstName"
+		
+		// formControlName is another directive initialized with formControl object from component
+        formControlName = "firstName"
+      />
+    </div>
+	
+	// reactiveForm.get('firstName') returns FormControl object. Here firstName is the formControl created in component.
+    <small *ngIf="reactiveForm.get('firstName')?.invalid && reactiveForm.get('firstName')?.touched">
+      Invalid Name
+    </small>
+
+    <div class="mb-3">
+      <label for="exampleInputEmail1" class="form-label">Email address</label>
+      <input
+        type="email"
+        class="form-control"
+        id="exampleInputEmail1"
+        aria-describedby="emailHelp"
+        name="Email"
+        formControlName = "email"
+      />
+    </div>
+    <small *ngIf="reactiveForm.get('email')?.invalid && reactiveForm.get('email')?.touched">
+      Invalid Name
+    </small>
+
+    <label for="floatingTextarea2" class="form-label">Address</label>
+    <textarea
+      class="form-control"
+      placeholder="Leave a comment here"
+      id="floatingTextarea2"
+      style="height: 100px"
+      name="Address"
+      formControlName = "address"
+    >
+    </textarea>
+    <small *ngIf="reactiveForm.get('address')?.invalid && reactiveForm.get('address')?.touched">
+      Invalid Name
+    </small>
+
+    <button
+      type="submit"
+      class="btn btn-primary mt-3"
+      [disabled]="reactiveForm.invalid"
+    >
+      Submit
+    </button>
+  </form>
+</div>
+
+
+input.ng-invalid.ng-touched, textarea.ng-invalid.ng-touched{
+    border: 1px solid red;
+}
+
+small {
+    color: red;
+    display: block;
+}
+
+
+
+Grouping formcontrols using nested formGroup :
+-----------------------------------------------
+export class FirstComponent implements OnInit {
+
+  reactiveForm!:FormGroup;
+
+  ngOnInit(): void {
+    this.reactiveForm = new FormGroup({
+      firstName: new FormControl('', [Validators.required, Validators.minLength(3)])
+		
+	  // Nested form group
+      address: new FormGroup({
+        street: new FormControl('', Validators.required),
+        country: new FormControl('', Validators.required)
+      })
+    });
+  }
+
+  submitForm() {
+    console.log(this.reactiveForm);
+  } 
+}
+
+
+<h2>This is the first component</h2>
+
+<div class="col-md-6" style="margin: auto">
+  <form [formGroup]="reactiveForm" (ngSubmit)="submitForm()">
+    <div class="mb-3">
+      <label class="form-label">First Name</label>
+      <input
+        type="text"
+        class="form-control"
+        name="FirstName"
+        formControlName = "firstName"
+      />
+    </div>
+    <small *ngIf="reactiveForm.get('firstName')?.invalid && reactiveForm.get('firstName')?.touched">
+      Invalid Name
+    </small>
+	
+	// Using formGroupName directive for binding. All other remain same as above.
+    <div class="mb-3" formGroupName="address">
+      <label class="form-label">Street</label>
+      <input
+        type="text"
+        class="form-control"
+        aria-describedby="emailHelp"
+        name="Street"
+        formControlName = "street"
+      />
+    </div>
+	
+	// Since address is nested, we use reactiveForm.get('address.street')
+    <small *ngIf="reactiveForm.get('address.street')?.invalid && reactiveForm.get('address.street')?.touched">
+      Invalid Street
+    </small>
+	
+    <div class="mb-3" formGroupName="address">
+      <label class="form-label">Country</label>
+      <input
+        type="text"
+        class="form-control"
+        aria-describedby="emailHelp"
+        name="Country"
+        formControlName = "country"
+      />
+    </div>
+    <small *ngIf="reactiveForm.get('address.country')?.invalid && reactiveForm.get('address.country')?.touched">
+      Invalid Country
+    </small>
+
+    <button
+      type="submit"
+      class="btn btn-primary mt-3"
+      [disabled]="reactiveForm.invalid">
+      Submit
+    </button>
+  </form>
+</div>
+
+
+FormArray :
+-----------
+In Angular, both FormGroup and FormArray are part of the @angular/forms module and are used for managing forms. While FormGroup is used to manage a 'group' of form controls, FormArray is used to manage an 'array' of form controls.
+It's useful when you need to manage a dynamic list of form controls where the number of controls may change during runtime. For example Add skills button adds new form control to put a anew skill.
+
+
+Example of a formArray:
+-------------------------
+
+export class FirstComponent implements OnInit {
+
+  reactiveForm!:FormGroup;
+
+  ngOnInit(): void {
+    this.reactiveForm = new FormGroup({
+      firstName: new FormControl('', [Validators.required, Validators.minLength(3)]),
+	
+	  // Here we have created a Formarray by passing array instead of an object unlike formgroup. 
+      skills: new FormArray([
+        new FormControl('', Validators.required),
+        new FormControl('', Validators.required),
+        new FormControl('', Validators.required)
+      ])
+    });
+  }
+
+  submitForm() {
+    console.log(this.reactiveForm);
+  }
+
+  // This is getter method for skills property.	We can call this method by just methodname without parentheses like skills
+  get skills(){ 
+    return this .reactiveForm.get('skills') as FormArray;
+  }
+  
+  get firstName(){ 
+    return this .reactiveForm.get('firstName') as FormControl;
+  }
+}
+
+
+
+<div class="col-md-6" style="margin: auto">
+  <form [formGroup]="reactiveForm" (ngSubmit)="submitForm()">
+    <div class="mb-3">
+      <label for="exampleInputName" class="form-label">First Name</label>
+      <input
+        type="text"
+        class="form-control"
+        id="exampleInputName"
+        name="FirstName"
+        formControlName = "firstName"
+      />
+    </div>
+	
+	// Note: Here in ngIf instead of reactiveForm.get('firstName') we can use just firstName getter method as both returns FormControl.
+    <small *ngIf="firstName?.invalid && firstName?.touched">
+      Invalid Name
+    </small>
+
+	// Element created using formarray. Here we use formArrayName directive.
+    <div class="mb-3" formArrayName="skills">
+      <label for="">Skills</label>
+	  // skill.controls is used to access elements of skills array. controls is inbuilt property to access controls inside array. Since formControlName does not have a name , we are assigning index of element here.
+      <input type="text" *ngFor="let control of skills.controls ; let i=index" [formControlName]="i" placeholder="Add Skill" class="form-control mb-2">
+    </div>
+
+    <button
+      type="submit"
+      class="btn btn-primary mt-3"
+      [disabled]="reactiveForm.invalid"
+    >
+      Submit
+    </button>
+  </form>
+</div>
+
+
+
+Dynamically adding controls:
+----------------------------
+
+Here we create a skills input tag and we provide a btn to add/remove skills dynamically.
+
+export class FirstComponent implements OnInit {
+
+  reactiveForm!:FormGroup;
+
+  ngOnInit(): void {
+    this.reactiveForm = new FormGroup({
+      firstName: new FormControl('', [Validators.required, Validators.minLength(3)]),
+
+      skills: new FormArray([
+        new FormControl('', Validators.required),
+      ])
+    });
+  }
+
+  submitForm() {
+    console.log(this.reactiveForm);
+  }
+
+  get skills(){
+    return this .reactiveForm.get('skills') as FormArray;
+  }
+
+  // When Add btn is clicked, we create a formControl and push to formArray
+  addSkill() {
+    this.skills.push(new FormControl('', Validators.required));
+  }
+  
+  // When Remove btn is clicked, we delete a formControl from formArray
+  removeSkill(index: number) {
+    this.skills.removeAt(index);
+  }
+}
+
+
+
+<div class="col-md-6" style="margin: auto">
+  <form [formGroup]="reactiveForm" (ngSubmit)="submitForm()">
+    <div class="mb-3">
+      <label for="exampleInputName" class="form-label">First Name</label>
+      <input
+        type="text"
+        class="form-control"
+        id="exampleInputName"
+        name="FirstName"
+        formControlName = "firstName"
+      />
+    </div>
+    <small *ngIf="reactiveForm.get('firstName')?.invalid && reactiveForm.get('firstName')?.touched">
+      Invalid Name
+    </small>
+
+
+    <div class="mb-3" formArrayName="skills">
+      <label for="">Skills</label>
+      <div *ngFor="let control of skills.controls ; let i=index">
+        <input type="text" [formControlName]="i" placeholder="Add Skill" class="mb-2">
+        <input type="button" class="btn btn-danger ms-2" value="Remove Skills" (click)="removeSkill(i)">
+      </div>
+      <input type="button" class="btn btn-warning" value="Add Skills" (click)="addSkill()">
+    </div>
+
+    <button
+      type="submit"
+      class="btn btn-primary mt-3"
+      [disabled]="reactiveForm.invalid"
+    >
+      Submit
+    </button>
+  </form>
+</div>
+
+
+Dynamically adding formGroups:
+------------------------------
+
+Here we dynamically create experiance form group in form array which has compan, role as form controls.
+
+export class FirstComponent implements OnInit {
+
+  reactiveForm!:FormGroup;
+
+  ngOnInit(): void {
+    this.reactiveForm = new FormGroup({
+      firstName: new FormControl('', [Validators.required, Validators.minLength(3)]),
+
+      experiance: new FormArray([]) // Initially empty
+    });
+  }
+
+  submitForm() {
+    console.log(this.reactiveForm);
+  }
+
+  get experiance(){
+    return this .reactiveForm.get('experiance') as FormArray;
+  }
+
+  addExp() { // When btn is clicked, new formGroup is pushed to formarray
+    this.experiance.push(new FormGroup({
+      company: new FormControl(''),
+      role: new FormControl('')
+    }));
+  }
+
+  removeExp(index: number) {
+    this.experiance.removeAt(index);
+  }
+}
+
+
+<div class="col-md-6" style="margin: auto">
+  <form [formGroup]="reactiveForm" (ngSubmit)="submitForm()">
+    <div class="mb-3">
+      <label for="exampleInputName" class="form-label">First Name</label>
+      <input
+        type="text"
+        class="form-control"
+        id="exampleInputName"
+        name="FirstName"
+        formControlName = "firstName"
+      />
+    </div>
+    <small *ngIf="reactiveForm.get('firstName')?.invalid && reactiveForm.get('firstName')?.touched">
+      Invalid Name
+    </small>
+
+
+    <div class="mb-3" formArrayName="experiance">
+      <label for="">Experiance</label>
+      <div *ngFor="let control of experiance.controls ; let i=index" [formGroupName]="i">
+        <div style="border:1px solid gray">
+          <label style="display: block;">Experiance : {{i}}</label>
+          <input type="text" formControlName="company" placeholder="Add Company" class="mb-2">
+          <input type="text" formControlName="role" placeholder="Add Role">
+          <input type="button" class="btn btn-danger ms-2" value="Remove Experiance" (click)="removeExp(i)">
+        </div>
+      </div>
+      <input type="button" class="btn btn-success" value="Add Experiance" (click)="addExp()">
+    </div>
+
+    <button
+      type="submit"
+      class="btn btn-primary mt-3"
+      [disabled]="reactiveForm.invalid"
+    >
+      Submit
+    </button>
+  </form>
+</div>
+
+
+
+
+Creating Custom Validator:
+--------------------------
+While creating custom validators for a form control, the main thing to focus on is 'errors' property of formcontrol(fc). If a fc is valid then errors is set to null and there is no validation error. Otherwise it is set with some object containg the errorcode.
+Ex: If a fc has Validators.required and suppose we submit form without adding anything, then the fc.errors is set to {required:true}. Where requiered is the error code.
+
+We can also provide specific message according to specific validation error by accessing errocode from errors property.
+
+
+Ex: Following file contains a custom validator which does not allow space in firstName fc.
+
+
+custom.validator.ts
+-------------------
+
+export class CustomValidator {
+
+    static noSpaceAllowed(control: AbstractControl): ValidationErrors | null {
+        if (control.value != null && control.value.indexOf(' ') != -1) {
+            return { noSpaceAllowed: true };
+        }
+        return null;
+    }
+}
+
+
+
+.ts file
+--------
+export class FirstComponent implements OnInit {
+
+  reactiveForm!:FormGroup;
+
+  ngOnInit(): void {
+    this.reactiveForm = new FormGroup({
+      firstName: new FormControl('', [Validators.required, Validators.minLength(3), CustomValidator.noSpaceAllowed])
+    });
+  }
+
+  submitForm() {
+    console.log(this.reactiveForm);
+  }
+
+  get firstName() {
+    return this.reactiveForm.get('firstName');
+  }
+}
+
+
+html
+-----
+<div class="col-md-6" style="margin: auto">
+  <form [formGroup]="reactiveForm" (ngSubmit)="submitForm()">
+    <div class="mb-3">
+      <label class="form-label">First Name</label>
+      <input
+        type="text"
+        class="form-control"
+        formControlName = "firstName"
+      />
+    </div>
+	
+	// Generating specific msg according to specific validation errors.
+    <div>
+      <small *ngIf="firstName?.errors?.['required'] && firstName?.touched">
+        FirstName is required
+      </small>
+
+      <small *ngIf="firstName?.errors?.['minlength'] && firstName?.touched">
+        Firstname should have atleast 3 charcters
+      </small>
+
+      <small *ngIf="firstName?.errors?.['noSpaceAllowed'] && firstName?.touched">
+        Firstname should not have space
+      </small>
+    </div>
+
+    <button
+      type="submit"
+      class="btn btn-primary mt-3"
+    >
+      Submit
+    </button>
+  </form>
+</div>
+
+
+
+Creating a custom async validator
+---------------------------------------
+In Angular reactive forms, asynchronous validators are functions that perform validation checks asynchronously. Unlike synchronous validators, which execute immediately during form validation, asynchronous validators return promises or observables that resolve at a later time. This allows for validation logic that depends on asynchronous operations, such as making HTTP requests or performing database queries, or any other asynchronous task.
+
+Once the asynchronous operation completes, the promise is resolved or the observable emits a value. If the resolved value indicates that the validation check passed, the validator function should resolve the promise with null or emit null from the observable. If the validation check fails, the function should resolve the promise with an error object or emit an error value from the observable.
+
+Ex: A username entered should be unique. When a username is entered it checks that uname in server then does validation.
+
+import { AbstractControl, ValidationErrors } from "@angular/forms";
+import { resolve } from "dns";
+
+export class CustomValidator {
+	
+	// Async validator returning a promise.
+    static checkUserName(control: AbstractControl): Promise<any> {
+        return userNameAllowed(control.value);
+    }
+}
+
+function userNameAllowed(uname: string): Promise<any> {
+    const takenUnames = ['john', 'jack', 'steve']; //Need to fetched from db
+
+    return new Promise((resolve, reject)=>{
+        // Used to simulate some latency as searching from db/server takes some time
+        setTimeout(()=>{
+            if (takenUnames.includes(uname)) {
+                resolve({userNameTaken:true});
+            }
+            else {
+                resolve(null);
+            }
+        }, 3000);
+    });
+}
+
+
+
+export class FirstComponent implements OnInit {
+
+  reactiveForm!:FormGroup;
+
+  ngOnInit(): void {
+    this.reactiveForm = new FormGroup({
+	
+	  // Here the 3rd argument to the FormControl is the async validator.
+      userName: new FormControl('', [Validators.required, Validators.minLength(3)], CustomValidator.checkUserName)
+    });
+  }
+
+  submitForm() {
+    console.log(this.reactiveForm);
+  }
+
+  get firstName() {
+    return this.reactiveForm.get('userName');
+  } 
+}
+
+
+<div class="col-md-6" style="margin: auto">
+  <form [formGroup]="reactiveForm" (ngSubmit)="submitForm()">
+    <div class="mb-3">
+      <label class="form-label">First Name</label>
+      <input
+        type="text"
+        class="form-control"
+        formControlName = "userName"
+      />
+    </div>
+    <div>
+      <small *ngIf="firstName?.errors?.['required'] && firstName?.touched">
+        FirstName is required
+      </small>
+
+      <small *ngIf="firstName?.errors?.['minlength'] && firstName?.touched">
+        FirstName should have atleast 3 characters
+      </small>
+
+      <small *ngIf="firstName?.errors?.['userNameTaken'] && firstName?.touched">
+        FirstName is already taken
+      </small>
+    </div>
+
+    <button
+      type="submit"
+      class="btn btn-primary mt-3"
+    >
+      Submit
+    </button>
+  </form>
+</div>
+
+When it is performing async validation on a tag, ng-pending class is appended to that tag. So we can use that angular class to add some style.
+
+input.ng-pending {
+    border: 1px solid yellow;
+    cursor: wait;
+}
+
+
+
+Setting formControl values using patchValue:
+---------------------------------------------
+In Angular, the patchValue() method is used to set the values of form controls or form groups in reactive forms. It's particularly useful when you want to update only specific values of your form without affecting the rest.
+
+Ex:
+
+ngOnInit(): void {
+    this.reactiveForm = new FormGroup({
+      userName: new FormControl('', [Validators.required, Validators.minLength(3)], CustomValidator.checkUserName)
+    });
+
+    this.reactiveForm.patchValue({
+      userName: 'gian'
+    });
+  }
+  
+Can also be used for setting multiple values.
+this.myForm.patchValue({
+    firstName: 'John',
+    lastName: 'Doe'
+});
+
+updates only the provided form control values, leaving the rest unchanged. If you want to update all form controls, you should use setValue() instead. Here we need to pass all formcontrols with required values.
+
+
+Resetting form :
+---------------
+The reset() method in Angular's reactive forms is used to reset the form control or formGroup values back to their initial state or to a specified value.
+
+resetForm() {
+  this.reactiveForm.reset();
+}
+
+If u reset(), then the default values set to some formcontrols will lost.
+
+So, within reset() pass everthing tha u passed while creating formgroup.
+
+resetForm() {
+	this.reactiveForm.reset({
+		firstName: '',
+		lastNmae: '',
+		gender: 'Male'
+	});
+}
+
+Note that its structure should be same that is passed in original formgroup.
+
+
+
+FormBuilders:
+-------------
+
+FormBuilder provides methods for creating form controls with validators and async validators, as well as creating form groups with multiple controls. FormBuilder provides a more concise and readable way to create form controls and form groups, especially for forms with multiple controls.
+
+Using FormBuilder:
+
+constructor(private fb: FormBuilder) { }
+
+We use the group() method of FormBuilder to create a FormGroup. And within that we pass object with key as name of form control and value as an array without creating FC object like in FormGroup way of creation.
+
+ngOnInit(): void {
+  this.reactiveForm = this.fb.group({
+    userName: ['', [Validators.required, Validators.minLength(3)]],
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(6)], SOmeAsyncValdtr]
+	
+	skills: this.fb.array([]) // Creating formarray
+  });
+}
+
+
+addSkill() {
+    // Push a new FormControl to the skills FormArray using control
+    (this.reactiveForm.get('skills') as FormArray).push(this.fb.control(''));
+}
+
+
+
+23. Bootstraping Angular Application :
+=========================================
+Bootstrapping in Angular refers to the process of initializing the Angular framework within a web application. This typically involves defining the root module of the application and specifying the root component that should be rendered within the HTML document.
+
+1) In main.ts, we need to bootstrap the application by telling Angular to start executing the root module.(AppModule)
+platformBrowserDynamic().bootstrapModule(AppModule)
+  .catch(err => console.error(err));
+  
+2) In app.module.ts, we need to define the root component(AppComponent)
+bootstrap: [AppComponent] // Specify the root component here within @NgModule
+
+3)Then provide the selector of rootcomponet <app-root> in index.html.
+
+
+
+24. ng-template:
+=================
+>  <ng-template> element defines a template that is not rendered by default.
+> With <ng-template>, you can define template content that is only being rendered by Angular when you, whether directly or indirectly, specifically instruct it to do so, allowing you to have full control over how and when the content is displayed.
+> Note that if you wrap content inside an <ng-template> without instructing Angular to render it, such content will not appear on a page.
+
+Ex:
+<ng-template>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
+</ng-template>
+
+This paragraph will never be rendered.
+
+> ng-template supports template reference variables using the # syntax.
+
+
+24.1 Using it with NgTemplateOutlet:
+-------------------------------------
+> NgTemplateOutlet is a structural directive that allows you to dynamically render a template at a specific location within your template.
+
+Ex:
+<ng-template #mypara>
+    <p style="background-color: pink;color: navy;">Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
+</ng-template>
+
+<div *ngTemplateOutlet="mypara"></div>
+
+Here, it replaces the content of the host element (<div> in this case) with the content of the referenced template (#mypara).
+
+
+> If you have any element inside your host element, it will be completely replaced by content of the referenced template.
+Ex:
+<ng-template #mypara>
+    <p style="background-color: pink;color: navy;">Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
+</ng-template>
+
+<div *ngTemplateOutlet="mypara">
+	<h1> Some header </h1>
+</div>
+
+here, "Some header"  is not displayed as it is replaced by #mypara.
+If you want to render header also put it inside ng-template or wrap ng-template in child div.
+Ex:
+<ng-template #mypara>
+    <p style="background-color: pink;color: navy;">Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
+</ng-template>
+
+<div>
+    <h1 style="color: red;">heelo thre</h1>
+    <div *ngTemplateOutlet="mypara"></div>
+</div>
+
+
+24.2 Using NgTemplateOutlet with NgContainer:
+---------------------------------------------
+> The <ng-container> allows us to use structural directives without any extra element, making sure that the only DOM changes being applied are those dictated by the directives themselves.
+> While NgTemplateOutlet can technically be used with any HTML element, using ng-container is a common and recommended practice in Angular development due to the reasons mentioned above. 
+
+1. No Additional DOM Element:
+ng-container is a special Angular directive that doesn't create an additional DOM element. It serves as a logical container for hosting structural directives like NgTemplateOutlet. Using ng-container avoids introducing unnecessary elements into the DOM hierarchy, which can help keep the DOM clean and optimized.
+
+2. Avoiding Styling Conflicts: 
+Using ng-container ensures that the dynamically rendered content does not inherit any styles or layout properties from a surrounding HTML element.
+
+3. Performance Optimization: Since ng-container doesn't introduce any extra DOM nodes, it can help improve the performance of your application, especially when rendering large lists or dynamically switching between multiple templates.
+
+Ex:
+<ul>
+  <ng-container *ngFor="let item of items"> // Instaed of using div, use ng-container
+    <li *ngIf="item.isValid">
+      {{ item.name }}
+    </li>
+  </ng-container>
+</ul>
+
+
+Ex: Using with ng-template
+<ng-template #mypara>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
+</ng-template>
+
+<ng-container *ngTemplateOutlet="mypara"></ng-container>
+
+
+> Unlike NgTemplate, NgConatiner will display its contents without need to specify where to render..
+
+Ex:
+<ng-container>
+    <h1>My name is john</h1>
+</ng-container>
+
+// My name is john
+
+
+24.3 Using ng-template with ngIf:
+----------------------------------------
+Ex1:
+In class,
+export class FirstComponent {
+  isUserLoggedIn!:boolean;
+
+  login() {
+    this.isUserLoggedIn = true;
+  }
+
+  logout() {
+    this.isUserLoggedIn = false;
+  }
+}
+
+In html,
+<div *ngIf="isUserLoggedIn; else loginTemplate">
+  <p>Welcome, user!</p>
+</div>
+
+<ng-template #loginTemplate>
+  <p>Please log in to access this content.</p>
+</ng-template>
+
+<button (click)="login()">Login</button>
+<button (click)="logout()">Logout</button>
+
+
+Ex2:
+<p *ngIf="flag; then ifBlock else elseBlock"></p> // p can be replaced with ng-container
+
+<ng-template #ifBlock>
+    <h3>If condition is executing</h3>
+</ng-template>
+
+<ng-template #elseBlock>
+    <h3>Else condition is executing</h3>
+</ng-template>
+
+
+
+
+
+
+
+  
+  
+
+  
+=======================================
+
+28. LifeCycle Hooks in Angular:
+================================
+> The Angular LifeCycle Hooks are the methods that Angular invokes on a directive or a component, as it creates, changes and destroys them.
+
+> Life cycle hooks are,
+ngOnChanges
+ngOnInit
+ngDoCheck
+ngAfterContentInit
+ngAfterContentChecked
+ngAfterViewInit
+ngAfterViewChecked
+ngDestroy
+
+
+Following are the stages of an Angular application:
+1. When an Angular application starts, it first creates and renders the root component.
+2. Then it creates and renders its children and their children. In this way it forms a tree of components.
+3. Once Angular loads a component, it starts the process of rendering the view. To do that, it needs to check the input properties, evaluate data bindings and expressions, render the projected content etc.
+4. Angular then removes the component from DOM when it is no longer needed.
+5. And Angular lets us know when these events will happen using LifeCycle Hooks.
+
+
+
+28.1 Constructor:
+------------------
+> When Angular encounters a component in the application's template or routing configuration, it creates an instance of that component class.
+> Whenever the selector of a class is encountered, it will instatiate its respective class by calling its constructor. If no constructor is provided, there will be a default constructor through which it is instatiated.
+
+> <app-login></app-login> when this is encountered, constructor of Login componenet is called. And it is called only once.
+
+> If there are multiple same selectors, then for each selector, constructor is called separately.
+Ex:
+<app-demo></app-demo>
+<app-demo></app-demo>
+<app-demo></app-demo>
+
+Here, constructor of DemoComponent is called thrice. i.e For each selector, an instance of DemoComponent is created.
+
+Ex:
+export class DemoComponent {
+	constructor(){
+		// some code
+	}
+}
+
+> The constructor is a special method within a component class that is called when an instance of the component is created. It is typically used for basic initialization tasks, such as injecting dependencies and setting up initial state. 
+
+> Dependency Injection:
+Angular's dependency injection system allows you to declare dependencies in a component's constructor. Angular then automatically provides instances of these dependencies when creating the component instance.
+Ex:
+export class MyComponent {
+  constructor(private myService: MyService) {
+    // myService is automatically injected by Angular
+  }
+}
+
+> When the constructor of a component is called, Angular has performed the following actions:
+. Created an instance of the component class.
+. Set up dependency injection by providing any required services.
+. Instantiated the component but hasn't initialized @Input properties or the component's view yet.
+. When a constructor is called, by that time, the child components of that component are not yet constructed.
+. No access to the DOM or template elements, as they are not yet created or initialized.
+. Projected contents are also not available by the time, the constructor of a component is called.
+. The component's properties and methods are available, but they may not be fully initialized or accessible depending on the order of execution within the constructor.
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
