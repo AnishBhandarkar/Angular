@@ -248,23 +248,23 @@ It generates a /dist/ (distribution) folder containing optimized files like:
 - Examples: C, C++, Rust, Go
 
 - Key Features:
-✔ Fast execution (no need for translation at runtime)
-✔ Optimized performance
-❌ Compilation step is required before running
+    - Fast execution (no need for translation at runtime)
+    - Optimized performance
+    - Compilation step is required before running
 
 
 
 🔹 Interpreted language:
 ------------------------
-> An interpreted language is executed line by line by an interpreter at runtime.
-> No separate compilation step – the program is translated and executed on the fly.
+- An interpreted language is executed line by line by an interpreter at runtime.
+- No separate compilation step – the program is translated and executed on the fly.
 
-> Examples: Python, JavaScript (Old), PHP
+- Examples: Python, JavaScript (Old), PHP
 
-> Key Features:
-✔ More flexible (no need to compile separately)
-✔ Can run immediately
-❌ Slower execution (because translation happens every time you run the code)
+- Key Features:
+    - More flexible (no need to compile separately)
+    - Can run immediately
+    - Slower execution (because translation happens every time you run the code)
 
 
 
@@ -281,9 +281,9 @@ Examples: Java (JVM), JavaScript (modern V8 engine), C# (.NET)
     - Over time, performance improves
 
 - Key Features:
-✔ Faster than pure interpretation
-✔ Optimized during execution
-❌ Takes time to warm up (because compilation happens at runtime)
+    - Faster than pure interpretation
+    - Optimized during execution
+    - Takes time to warm up (because compilation happens at runtime)
 
 
 Note:
