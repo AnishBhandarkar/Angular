@@ -8,7 +8,7 @@ Table of Contents:
 # Creating new Angular project
 # Introduction about build
 # Compiled vs. Interpreted vs. AOT vs. JIT
-# Just in Time vs. Ahead of Time compilation in Angular
+- [Just in Time vs. Ahead of Time compilation in Angular](#just-in-time-vs-ahead-of-time-compilation-in-angular)
 # Creating a project
 # How Angular app runs?
 # What is SPA? (Single Page Application)
@@ -292,7 +292,7 @@ Note:
 - Both use JIT compilation.
 
 
-# Just in Time vs. Ahead of Time compilation in Angular:
+# Just in Time vs. Ahead of Time compilation in Angular
 Both JIT (Just-in-Time) and AOT (Ahead-of-Time) involve compilation, but they differ in 'when' and 'how' the compilation happens.
 
 1) JIT Compilation (Just-in-Time)
