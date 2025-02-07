@@ -7,7 +7,8 @@ Table of Contents:
 # Node.js  vs. nvm vs. npm
 # Creating new Angular project
 # Introduction about build
-# Just in Time vs. Ahead of Time compilation
+# Compiled vs. Interpreted vs. AOT vs. JIT
+# Just in Time vs. Ahead of Time compilation in Angular
 # Creating a project
 # How Angular app runs?
 # What is SPA? (Single Page Application)
@@ -239,8 +240,59 @@ It generates a /dist/ (distribution) folder containing optimized files like:
 | **Error Handling** | More logging              | Less logging (for security)      |
 
 
-# Just in Time vs. Ahead of Time compilation:
----------------------------------------------
+# Compiled vs. Interpreted vs. AOT vs. JIT
+🔹 Compiled language: (Ahead-of-Time - AOT)
+-----------------------------------------
+- A compiled language is one where the source code is translated into machine code before execution.
+
+- Examples: C, C++, Rust, Go
+
+- Key Features:
+✔ Fast execution (no need for translation at runtime)
+✔ Optimized performance
+❌ Compilation step is required before running
+
+
+
+🔹 Interpreted language:
+------------------------
+> An interpreted language is executed line by line by an interpreter at runtime.
+> No separate compilation step – the program is translated and executed on the fly.
+
+> Examples: Python, JavaScript (Old), PHP
+
+> Key Features:
+✔ More flexible (no need to compile separately)
+✔ Can run immediately
+❌ Slower execution (because translation happens every time you run the code)
+
+
+
+🔹 JIT (Just-In-Time Compilation) - Hybrid Approach
+-----------------------------------------------------
+- JIT compilation is a mix of both compiled and interpreted approaches.
+- The code is partially compiled before execution (into an intermediate form) and then compiled into machine code at runtime.
+Examples: Java (JVM), JavaScript (modern V8 engine), C# (.NET)
+
+- Process (Java Example): (Same with Javascript (Modern) as well)
+    - You write Java code → Program.java
+    - It is compiled into an intermediate form (bytecode) → Program.class
+    - When executed, the JVM interprets it first but JIT compiles frequently used parts into machine code
+    - Over time, performance improves
+
+- Key Features:
+✔ Faster than pure interpretation
+✔ Optimized during execution
+❌ Takes time to warm up (because compilation happens at runtime)
+
+
+Note:
+-----
+- Javascript and Java both are not neither pure compiled nor pure interpreted languages.
+- Both use JIT compilation.
+
+
+# Just in Time vs. Ahead of Time compilation in Angular:
 Both JIT (Just-in-Time) and AOT (Ahead-of-Time) involve compilation, but they differ in 'when' and 'how' the compilation happens.
 
 1) JIT Compilation (Just-in-Time)
@@ -578,16 +630,16 @@ Instead of fetching new HTML files from the server, Angular modifies the existin
 How Components are Stored and Rendered in Angular?
 -----------------------------------------------------
 1️) At the start (ng serve or ng build)
-> Angular compiles all components (.ts, .html, .css) into optimized JavaScript files.
-> These files are loaded into the browser when the application first starts.
-> The browser does not need to request new HTML files from the server.
+- Angular compiles all components (.ts, .html, .css) into optimized JavaScript files.
+- These files are loaded into the browser when the application first starts.
+- The browser does not need to request new HTML files from the server.
 
 2️) When navigating between pages
-> Angular does not reload the page.
-> Instead, it removes the old component from the DOM and inserts the new component inside <router-outlet>.
-> The JavaScript in memory handles this transition without contacting the server.
+- Angular does not reload the page.
+- Instead, it removes the old component from the DOM and inserts the new component inside <router-outlet>.
+- The JavaScript in memory handles this transition without contacting the server.
 
-> The server is only contacted once unless you refresh or fetch new data via an API.
+- The server is only contacted once unless you refresh or fetch new data via an API.
 
 
 
