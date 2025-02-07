@@ -1,17 +1,17 @@
-Table of Contents:
-# API vs. Framework vs. Library
-# What is Angular? 
-# React vs. Angular
-# Inversion of Control (IOC)
-# Installation
-# Node.js  vs. nvm vs. npm
-# Creating new Angular project
-# Introduction about build
-# Compiled vs. Interpreted vs. AOT vs. JIT
+# Table of Contents
+- [API vs. Framework vs. Library](#api-vs-framework-vs-library)
+- [What is Angular?](#what-is-angular)
+- [React vs. Angular](#react-vs-angular)
+- [Inversion of Control (IOC)](#inversion-of-control-ioc)
+- [Installation](#installation)
+- [Node.js vs. nvm vs. npm](#nodejs-vs-nvm-vs-npm)
+- [Creating new Angular project](#creating-new-angular-project)
+- [Introduction about build](#introduction-about-build)
+- [Compiled vs. Interpreted vs. AOT vs. JIT](#compiled-vs-interpreted-vs-aot-vs-jit)
 - [Just in Time vs. Ahead of Time compilation in Angular](#just-in-time-vs-ahead-of-time-compilation-in-angular)
-# Creating a project
-# How Angular app runs?
-# What is SPA? (Single Page Application)
+- [Creating a project](#creating-a-project)
+- [How Angular app runs?](#how-angular-app-runs)
+- [What is SPA? (Single Page Application)](#what-is-spa-single-page-application)
 
 
 
