@@ -280,47 +280,42 @@ ng new Proj-name
 
 This will create following folder structure.
 
-📦 Project Root ├── 📂 .angular ├── 📂 node_modules ├── 📂 src │ ├── 📂 app │ │ ├── 📄 app-routing.module.ts │ │ ├── 📄 app.module.ts │ │ ├── 📄 app.component.html │ │ ├── 📄 app.component.scss │ │ ├── 📄 app.component.ts │ │ ├── 📄 app.component.spec.ts │ ├── 📂 assets │ │ ├── 📄 .gitkeep │ ├── 📂 environments │ │ ├── 📄 environment.ts │ │ ├── 📄 environment.prod.ts │ ├── 📄 favicon.ico │ ├── 📄 index.html │ ├── 📄 main.ts │ ├── 📄 polyfills.ts │ ├── 📄 styles.css │ ├── 📄 test.ts ├── 📄 .browserslistrc ├── 📄 .editorconfig ├── 📄 .gitignore ├── 📄 angular.json ├── 📄 karma.conf.js ├── 📄 package-lock.json ├── 📄 package.json ├── 📄 README.md ├── 📄 tsconfig.app.json ├── 📄 tsconfig.json └── 📄 tsconfig.spec.json
-
-
----
-
-- .angular
-- node_modules
-- src
-	- app
-		- app-routing.module.ts
-		- app.module.ts
-		- app.component.html
-		- app.component.scss
-		- app.component.ts
-		- app.component.spec.ts
+-  📂.angular
+-  📂node_modules
+-  📂src
+	-  📂app
+		- 📄app-routing.module.ts
+		- 📄app.module.ts
+		- 📄app.component.html
+		- 📄app.component.scss
+		- 📄app.component.ts
+		- 📄app.component.spec.ts
 	
-	- assets
-		- .gitkeep
+	-  📂assets
+		- 📄.gitkeep
 		
-	- environments
-		- environment.ts
-		- environment.prod.ts
+	-  📂environments
+		- 📄environment.ts
+		- 📄environment.prod.ts
 	
-	- favicon.ico
-	- index.html
-	- main.ts
-	- polyfills.ts
-	- styles.css
-	- test.ts
+	- 📄favicon.ico
+	- 📄index.html
+	- 📄main.ts
+	- 📄polyfills.ts
+	- 📄styles.css
+	- 📄test.ts
 
-- .browserslistrc
-- .editorconfig
-- .gitignore
-- angular.json
-- karma.conf.js
-- package-lock.json
-- package.json
-- README.md
-- tsconfig.app.json
-- tsconfig.json
-- tsconfig.spec.json
+- 📄.browserslistrc
+- 📄.editorconfig
+- 📄.gitignore
+- 📄angular.json
+- 📄karma.conf.js
+- 📄package-lock.json
+- 📄package.json
+- 📄README.md
+- 📄tsconfig.app.json
+- 📄tsconfig.json
+- 📄tsconfig.spec.json
 
 
 Functinalities of each file are as follows:
@@ -402,8 +397,6 @@ Functinalities of each file are as follows:
 
 > `src/test.ts`
 - Configures unit testing using Karma.
-
----
 
 > `.browserslistrc`
 - Specifies which browsers the application should support.
@@ -552,7 +545,7 @@ Summary of the Angular Startup Flow
 4. `index.html` contains the `<app-root>` tag, which Angular replaces with `AppComponent`'s content.  
 5.  Angular compiles templates, initializes components, and sets up change detection.  
 
-=
+
 # What is SPA? (Single Page Application)
 
 > A Single Page Application (SPA) is a type of web application that loads a single HTML page and dynamically updates the content without reloading the entire page. 
