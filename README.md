@@ -36,7 +36,6 @@ Table of Contents:
 > Example: Angular (Complete front-end framework), Spring Boot (Java back-end framework), Django (Python web framework)
 > Think of Angular as a full construction kit —it provides everything.
 
-===========================================================================================================================================
 
 # What is Angular?
 --------------------------------
@@ -45,7 +44,6 @@ Table of Contents:
 > Angular provides a broad suite of tools, APIs, and libraries to simplify and streamline the development workflow. 
 > Angular gives you a solid platform on which to build fast, reliable applications that scale with both the size of the team and the size of the codebase.
 
-===========================================================================================================================================
 
 # React vs. Angular
 --------------------------------
@@ -61,7 +59,6 @@ Great question! In JavaScript, the distinction between **API, Library, and Frame
 | **Flexibility**    | High—you can use React with any backend, state manager, etc. | Lower—you follow Angular's structure and use its modules |
 | **Inversion of Control (IoC)** | No (you control the flow) | Yes (Angular manages component lifecycle) |
 
-===========================================================================================================================================
 
 # Inversion of Control (IOC):
 ------------------------------
@@ -101,7 +98,6 @@ export class ExampleComponent implements OnInit {
 
 Here, Angular controls the lifecycle—it calls `ngOnInit()` when the component initializes.
 
-===========================================================================================================================================
 
 # Installation
 -----------------
@@ -113,7 +109,6 @@ Here, Angular controls the lifecycle—it calls `ngOnInit()` when the component 
   npm -v
   ng -v
   
-===========================================================================================================================================
 
 # Node.js  vs. nvm vs. npm
 ---------------------------
@@ -179,7 +174,6 @@ Here, Angular controls the lifecycle—it calls `ngOnInit()` when the component 
 
 - Think of NPM as a marketplace for JavaScript libraries—it lets you install and manage packages.
 
-===========================================================================================================================================
 
 # Creating new Angular project
 - ng new proj-name
@@ -205,7 +199,6 @@ ng serve --open (Shorthand: ng s -o)
 To create a production build: ng build --prod
 This generates optimized files inside the dist/ folder.
 
-===========================================================================================================================================
 
 # Introduction about build
 ---------------------------
@@ -242,7 +235,6 @@ It generates a /dist/ (distribution) folder containing optimized files like:
 | **Performance**    | Slower 					 | Faster                           |
 | **Error Handling** | More logging              | Less logging (for security)      |
 
-===========================================================================================================================================
 
 # Just in Time vs. Ahead of Time compilation:
 ---------------------------------------------
@@ -282,49 +274,53 @@ Key Difference:
 	- Faster Execution: Precompiled templates are ready to be executed by the browser directly, reducing the time spent compiling in the browser.
 	- Early Error Detection: AOT can catch template errors during the build, helping to avoid runtime errors.
 
-===========================================================================================================================================
 
 # Creating a project:
 ng new Proj-name
 
 This will create following folder structure.
 
-> .angular
-> node_modules
-> src
-	> app
-		> app-routing.module.ts
-		> app.module.ts
-		> app.component.html
-		> app.component.scss
-		> app.component.ts
-		> app.component.spec.ts
-	
-	> assets
-		> .gitkeep
-		
-	> environments
-		> environment.ts
-		> environment.prod.ts
-	
-	> favicon.ico
-	> index.html
-	> main.ts
-	> polyfills.ts
-	> styles.css
-	> test.ts
+📦 Project Root ├── 📂 .angular ├── 📂 node_modules ├── 📂 src │ ├── 📂 app │ │ ├── 📄 app-routing.module.ts │ │ ├── 📄 app.module.ts │ │ ├── 📄 app.component.html │ │ ├── 📄 app.component.scss │ │ ├── 📄 app.component.ts │ │ ├── 📄 app.component.spec.ts │ ├── 📂 assets │ │ ├── 📄 .gitkeep │ ├── 📂 environments │ │ ├── 📄 environment.ts │ │ ├── 📄 environment.prod.ts │ ├── 📄 favicon.ico │ ├── 📄 index.html │ ├── 📄 main.ts │ ├── 📄 polyfills.ts │ ├── 📄 styles.css │ ├── 📄 test.ts ├── 📄 .browserslistrc ├── 📄 .editorconfig ├── 📄 .gitignore ├── 📄 angular.json ├── 📄 karma.conf.js ├── 📄 package-lock.json ├── 📄 package.json ├── 📄 README.md ├── 📄 tsconfig.app.json ├── 📄 tsconfig.json └── 📄 tsconfig.spec.json
 
-> .browserslistrc
-> .editorconfig
-> .gitignore
-> angular.json
-> karma.conf.js
-> package-lock.json
-> package.json
-> README.md
-> tsconfig.app.json
-> tsconfig.json
-> tsconfig.spec.json
+
+---
+
+- .angular
+- node_modules
+- src
+	- app
+		- app-routing.module.ts
+		- app.module.ts
+		- app.component.html
+		- app.component.scss
+		- app.component.ts
+		- app.component.spec.ts
+	
+	- assets
+		- .gitkeep
+		
+	- environments
+		- environment.ts
+		- environment.prod.ts
+	
+	- favicon.ico
+	- index.html
+	- main.ts
+	- polyfills.ts
+	- styles.css
+	- test.ts
+
+- .browserslistrc
+- .editorconfig
+- .gitignore
+- angular.json
+- karma.conf.js
+- package-lock.json
+- package.json
+- README.md
+- tsconfig.app.json
+- tsconfig.json
+- tsconfig.spec.json
 
 
 Functinalities of each file are as follows:
@@ -450,7 +446,6 @@ Functinalities of each file are as follows:
 > `tsconfig.spec.json`
 - TypeScript configuration for test files.
 
-===========================================================================================================================================
 
 # How Angular app runs?
 
@@ -557,8 +552,7 @@ Summary of the Angular Startup Flow
 4. `index.html` contains the `<app-root>` tag, which Angular replaces with `AppComponent`'s content.  
 5.  Angular compiles templates, initializes components, and sets up change detection.  
 
-============================================================================================================================================
-
+=
 # What is SPA? (Single Page Application)
 
 > A Single Page Application (SPA) is a type of web application that loads a single HTML page and dynamically updates the content without reloading the entire page. 
