@@ -71,8 +71,9 @@ Example in JavaScript: IoC vs. No IoC
 i)Without IoC (You Control the Flow)
 In a normal library, you call functions when needed:
 
-// Example using a library (React)
 ```javascript
+// Example using a library (React)
+
 function fetchData() {
   console.log("Fetching data...");
 }
@@ -85,6 +86,7 @@ you are in control—you decide when to call fetchData().
 ii) With IoC (Framework Controls the Flow)
 In a framework, it calls your code when required, following its rules:
 
+```javascript
 // Example in Angular (Framework)
 @Component({
   selector: 'app-example',
@@ -95,6 +97,7 @@ export class ExampleComponent implements OnInit {
     console.log("Component initialized!"); // Angular calls this method
   }
 }
+```
 
 Here, Angular controls the lifecycle—it calls `ngOnInit()` when the component initializes.
 
@@ -105,9 +108,9 @@ Here, Angular controls the lifecycle—it calls `ngOnInit()` when the component 
 > "npm install -g @angular/cli" in cmd.
 
 > Checking version:
-  node -v
-  npm -v
-  ng -v
+  - node -v
+  - npm -v
+  - ng -v
   
 
 # Node.js  vs. nvm vs. npm
@@ -446,13 +449,14 @@ Functinalities of each file are as follows:
 -------------------------------
 When you run `ng serve`, `ng build`, or `ng start`, Angular starts execution from `src/main.ts`, which is the main entry point of the application.  
 
-Inside `main.ts`: 
+```javascript
+// Inside `main.ts`: 
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { AppModule } from './app/app.module';
 
 platformBrowserDynamic().bootstrapModule(AppModule)
   .catch(err => console.error(err));
-
+```
 
 What happens here:  
 - `platformBrowserDynamic()` creates a dynamic platform for running Angular applications in the browser. It returns an instance of PlatformRef,
@@ -466,7 +470,8 @@ What happens here:
 -----------------------------
 Angular loads the `AppModule`, which is the root module of the application.  
 
-Inside `app.module.ts`:
+```javascript
+// Inside `app.module.ts`:
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
@@ -477,7 +482,7 @@ import { AppComponent } from './app.component';
   bootstrap: [AppComponent] 
 })
 export class AppModule { }
-
+```
 
 What happens here:  
 - `@NgModule` decorator marks this as an Angular module.  
@@ -491,7 +496,8 @@ What happens here:
 ----------------------------------
 Once `AppModule` is loaded, Angular initializes `AppComponent`, which serves as the root component of the application.  
 
-Inside `app.component.ts`:
+```javascript
+// Inside `app.component.ts`:
 import { Component } from '@angular/core';
 
 @Component({
@@ -502,6 +508,7 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'Practice';
 }
+```
 
 What happens here:  
 - `@Component` decorator marks this as an Angular component defines metadata for `AppComponent`.  
@@ -512,7 +519,8 @@ What happens here:
 ---------------------------------------
 The `index.html` file in `src` acts as the main container for the Angular app.  
 
-Inside `index.html`:
+```javascript
+// Inside `index.html`:
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -523,6 +531,7 @@ Inside `index.html`:
   <app-root></app-root> <!-- This will be replaced with AppComponent -->
 </body>
 </html>
+```
 
 What happens here:  
 - The `<app-root>` tag is a placeholder.  
