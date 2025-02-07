@@ -19,37 +19,35 @@
 # API vs. Framework vs. Library
 --------------------------------
 1) API:
-> A set of rules and protocols that allow different software components to communicate.
-> Defines how software interacts with external services or components.
-> Example: REST API (e.g., GitHub API, Twitter API) lets you fetch or modify data.
-> Think of an API as a menu in a restaurant – it tells you what you can order but doesn’t tell you how the food is prepared.
+- A set of rules and protocols that allow different software components to communicate.
+- Defines how software interacts with external services or components.
+- Example: REST API (e.g., GitHub API, Twitter API) lets you fetch or modify data.
+- Think of an API as a menu in a restaurant – it tells you what you can order but doesn’t tell you how the food is prepared.
 
 2) Library:
-> A collection of pre-written code that you can call and use in your application to simplify development.
-> You call functions from the library when needed.
-> Example: Lodash (JavaScript utility functions), NumPy (Python for numerical operations), jQuery (DOM manipulation), React
-> Think of a library as a toolbox – you pick and use the tools (functions) as required.
+- A collection of pre-written code that you can call and use in your application to simplify development.
+- You call functions from the library when needed.
+- Example: Lodash (JavaScript utility functions), NumPy (Python for numerical operations), jQuery (DOM manipulation), React
+- Think of a library as a toolbox – you pick and use the tools (functions) as required.
 
 
 3) Framework:
-> A structured environment that dictates how you should organize and build your application.
-> It calls your code and provides a set of rules and conventions (Inversion of Control).
-> Example: Angular (Complete front-end framework), Spring Boot (Java back-end framework), Django (Python web framework)
-> Think of Angular as a full construction kit —it provides everything.
+- A structured environment that dictates how you should organize and build your application.
+- It calls your code and provides a set of rules and conventions (Inversion of Control).
+- Example: Angular (Complete front-end framework), Spring Boot (Java back-end framework), Django (Python web framework)
+- Think of Angular as a full construction kit —it provides everything.
 
 
 # What is Angular?
 --------------------------------
-> Angular is a web framework that empowers developers to build fast, reliable applications.
-> It is maintained by a dedicated team at Google.
-> Angular provides a broad suite of tools, APIs, and libraries to simplify and streamline the development workflow. 
-> Angular gives you a solid platform on which to build fast, reliable applications that scale with both the size of the team and the size of the codebase.
+- Angular is a web framework that empowers developers to build fast, reliable applications.
+- It is maintained by a dedicated team at Google.
+- Angular provides a broad suite of tools, APIs, and libraries to simplify and streamline the development workflow. 
+- Angular gives you a solid platform on which to build fast, reliable applications that scale with both the size of the team and the size of the codebase.
 
 
 # React vs. Angular
 --------------------------------
-Great question! In JavaScript, the distinction between **API, Library, and Framework** becomes clearer when looking at **React** and **Angular**:
-
 ### **React (Library) vs. Angular (Framework)**
 
 | Feature            | **React (Library)** | **Angular (Framework)** |
