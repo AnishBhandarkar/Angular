@@ -664,6 +664,12 @@ How Components are Stored and Rendered in Angular?
 | File Compression      |  No                                      |  Yes  |
 
 
+Note:
+-----
+- When you run the ng build (build only) or ng serve (build and serve locally) CLI commands, the type of compilation (JIT or AOT) depends on the value of the aot property in your build configuration specified in angular.json. 
+- By default, aot is set to true for new CLI applications.
+- If its not set, then serve-jit, build-aot.
+
 ============================================================================================================================================
 
 
