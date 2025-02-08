@@ -12,6 +12,8 @@ Table of Contents:
 # How Angular app runs?
 # What is SPA? (Single Page Application)
 
+# ng serve vs. ng build:
+
 
 
 
@@ -49,17 +51,17 @@ Table of Contents:
 
 # React vs. Angular
 --------------------------------
-Great question! In JavaScript, the distinction between **API, Library, and Framework** becomes clearer when looking at **React** and **Angular**:
+Great question! In JavaScript, the distinction between API, Library, and Framework becomes clearer when looking at React and Angular:
 
-### **React (Library) vs. Angular (Framework)**
+### React (Library) vs. Angular (Framework)
 
-| Feature            | **React (Library)** | **Angular (Framework)** |
+| Feature            | React (Library) | Angular (Framework) |
 |--------------------|-------------------|-----------------------|
-| **Definition**      | A UI library focused on building components | A full-fledged framework for building web apps |
-| **Control Flow**   | You call React functions (`useState`, `useEffect`) | Angular dictates the app structure and calls your code |
-| **Opinionated?**   | No, you choose your tools (e.g., state management, routing) | Yes, Angular provides built-in solutions (RxJS, Forms, Router) |
-| **Flexibility**    | High—you can use React with any backend, state manager, etc. | Lower—you follow Angular's structure and use its modules |
-| **Inversion of Control (IoC)** | No (you control the flow) | Yes (Angular manages component lifecycle) |
+| Definition      | A UI library focused on building components | A full-fledged framework for building web apps |
+| Control Flow   | You call React functions (`useState`, `useEffect`) | Angular dictates the app structure and calls your code |
+| Opinionated?   | No, you choose your tools (e.g., state management, routing) | Yes, Angular provides built-in solutions (RxJS, Forms, Router) |
+| Flexibility    | High—you can use React with any backend, state manager, etc. | Lower—you follow Angular's structure and use its modules |
+| Inversion of Control (IoC) | No (you control the flow) | Yes (Angular manages component lifecycle) |
 
 ===========================================================================================================================================
 
@@ -234,11 +236,11 @@ It generates a /dist/ (distribution) folder containing optimized files like:
 -Development vs. Production Build 
 | Feature            | `ng serve` (Dev Mode)     | `ng build --prod` (Prod Mode)    |
 |--------------------|---------------------------|----------------------------------|
-| **Optimization**   | No                        | Yes (minification, tree-shaking) |
-| **File Size**      | Large                     | Small                            |
-| **Debugging**      | Easier (with source maps) | Harder (obfuscated code)         |
-| **Performance**    | Slower 					 | Faster                           |
-| **Error Handling** | More logging              | Less logging (for security)      |
+| Optimization   | No                        | Yes (minification, tree-shaking) |
+| File Size      | Large                     | Small                            |
+| Debugging      | Easier (with source maps) | Harder (obfuscated code)         |
+| Performance    | Slower 					 | Faster                           |
+| Error Handling | More logging              | Less logging (for security)      |
 
 ===========================================================================================================================================
 
@@ -593,6 +595,76 @@ How Components are Stored and Rendered in Angular?
 
 
 
+============================================================================================================================================
+
+# ng serve vs. ng build:
+
+- When we deploy app to browser via any of above methods, after compilation, the main.js file,
+  which contains all of the app's optimized code, polyfill.js, styles.css all are injected
+  into index.html.
+- Ex:
+<!doctype html>
+  <html lang="en">
+    <head>
+      ...
+      <link rel="icon" type="image/x-icon" href="favicon.ico">
+      <link rel="stylesheet" href="styles.css"></head>
+    <body>
+      <app-root></app-root>
+      <script src="polyfills.js" type="module">
+      </script><script src="main.js" type="module"></script>
+    </body>
+  </html>
+
+1. ng serve: (For Development)
+- Compiles the Angular application in memory without writing files to the disk.
+- When you run ng serve, the Angular CLI compiles the application in-memory using Webpack's Dev Server.
+- The compiled files (HTML, CSS, JS) are not written to disk (i.e., not stored in the dist/ folder).
+- Instead, they are stored temporarily in RAM and served directly from there.
+- This makes hot-reloading faster because there’s no need to read/write files on disk.
+- The .angular folder is stored on disk, but it mostly contains build cache and incremental compilation data.
+- This helps speed up subsequent ng serve runs, but it is not the actual compiled output.
+- ng serve Serves the application at http://localhost:4200/ by default.
+- It automatically reloads the page when files are modified.
+- When to use it:
+  - During development when you need live reloading and fast iterations.
+  - When testing your app locally without worrying about deployment.
+- When we do ng serve, JIT compilation occurs and code minification is minimal not complete minification.
+
+
+2. ng build: (For Production/Deployment)
+- Compiles the Angular app into static files (HTML, CSS, JS, assets).
+- Generates output in the dist/ folder stored in disk.
+- Uses ahead-of-time (AOT) compilation to optimize performance.
+- Minifies and optimizes files.
+- When to use it:
+  - When you need to deploy the app to a server or cloud hosting.
+  - When you need an optimized build for better performance.
+- Does NOT serve the app (you need an external server like http-server, Nginx, Apache, or Firebase Hosting).
+- To deploy that build in browser we can use http-server.
+  - npm install -g http-server
+  - Go to dist/ directory where html, js files are there.
+  - http-server -p 4200 // Will start the server.
+
+
+
+
+
+| Feature               | `ng serve`                               | `ng build` |
+|-----------------------|------------------------------------------|-----------------------|
+| Purpose               | Development (Live Preview)               | Production (Deployment) |
+| Creates `dist/`?      |  No                                      |  Yes |
+| Hot Reloading?        |  Yes                                     |  No |
+| Optimized Code?       |  No                                      |  Yes |
+| Server Required?      |  No (uses Webpack Dev Server)            |  Yes (e.g., `http-server`, Nginx) |
+| Minification          |  No (only bundling & some optimizations) |  Yes (fully minified using Terser) |
+| Tree Shaking          |  Partial                                 |  Full tree shaking  |
+| Dead Code Elimination |  No                                      |  Yes |
+| Source Maps           |  Enabled (for debugging)                 |  Disabled (unless manually enabled) |
+| File Compression      |  No                                      |  Yes  |
+
+
+============================================================================================================================================
 
 
 
