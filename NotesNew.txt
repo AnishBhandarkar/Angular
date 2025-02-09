@@ -13,6 +13,8 @@ Table of Contents:
 # What is SPA? (Single Page Application)
 
 # ng serve vs. ng build:
+# Modules in angular
+# Components in angular
 
 
 
@@ -53,7 +55,7 @@ Table of Contents:
 --------------------------------
 Great question! In JavaScript, the distinction between API, Library, and Framework becomes clearer when looking at React and Angular:
 
-### React (Library) vs. Angular (Framework)
+React (Library) vs. Angular (Framework)
 
 | Feature            | React (Library) | Angular (Framework) |
 |--------------------|-------------------|-----------------------|
@@ -673,6 +675,456 @@ Note:
 ============================================================================================================================================
 
 
+# Modules in angular.
+- Angular modules help organize and manage different parts of an application.
+- They group related components, directives, pipes, and services, making the app scalable, maintainable, and modular.
+
+- Creating a feature module via CLI: 
+ng g m module-name
+
+- Creating component within a feature module via CLI:
+ng g c module-name/component-name
+
+---
+
+1. What is an Angular Module?
+An Angular module is a container for a set of related functionality in an Angular application. 
+
+It helps:
+- Organize code by grouping related components, services, and directives.
+- Improve performanceby enabling lazy loading of features.
+- Manage dependencies efficiently.
+
+- Syntax: Creating a Module
+  - Modules are created using the `@NgModule` decorator.
+
+  -Ex:
+    import { NgModule } from '@angular/core';
+    import { BrowserModule } from '@angular/platform-browser';
+    import { AppComponent } from './app.component';
+
+    @NgModule({
+      declarations: [AppComponent], // Components, Directives, Pipes
+      imports: [BrowserModule], // Import other modules
+      providers: [], // Services
+      exports: [UserComponent] // Export the component to be used outside module.
+      bootstrap: [AppComponent] // Root component
+    })
+    export class AppModule {}
+
+
+---
+
+2. Why are Angular Modules Used?
+1. Code Organization– Groups related features together.
+2. Scalability– Helps build large applications in a modular way.
+3. Reusability– Feature modules can be reused across different applications.
+4. Lazy Loading– Improves performance by loading modules only when needed.
+5. Dependency Management– Handles service providers efficiently.
+
+---
+
+3. Types of Angular Modules
+Angular has different types of modules, each serving a specific purpose.
+
+1️⃣ Root Module (`AppModule`)
+- The main module that bootstraps the Angular app.
+- Declared in `app.module.ts`.
+
+
+@NgModule({
+  bootstrap: [AppComponent]
+})
+export class AppModule {}
+
+
+---
+
+2️⃣ Feature Modules
+- Used to organize specific functionality.
+- Example: A `UserModule` for user-related components.
+
+
+@NgModule({
+  declarations: [UserComponent],
+  imports: [CommonModule],
+  exports: [UserComponent]
+})
+export class UserModule {}
+
+
+Then, import it into `AppModule`:
+
+import { UserModule } from './user/user.module';
+
+@NgModule({
+  imports: [UserModule]
+})
+export class AppModule {}
+
+
+---
+
+3️⃣ Shared Module
+- Contains reusable components, directives, and pipes.
+- Prevents duplication across modules.
+
+
+@NgModule({
+  declarations: [SharedComponent],
+  exports: [SharedComponent]
+})
+export class SharedModule {}
+
+
+Then, import it into other modules:
+
+import { SharedModule } from '../shared/shared.module';
+
+@NgModule({
+  imports: [SharedModule]
+})
+export class FeatureModule {}
+
+
+---
+
+4️⃣ Core Module
+- Holds singleton services (e.g., authentication, API calls).
+- Prevents re-importing services in multiple places.
+
+
+@NgModule({
+  providers: [AuthService]
+})
+export class CoreModule {}
+
+
+Import in `AppModule`:
+
+import { CoreModule } from './core/core.module';
+
+@NgModule({
+  imports: [CoreModule]
+})
+export class AppModule {}
+
+
+---
+
+5️⃣ Routing Module
+- Manages application routes.
+- Example: `AppRoutingModule` to define all app routes.
+- app-routing.module.ts
+
+
+import { RouterModule, Routes } from '@angular/router';
+
+const routes: Routes = [
+  { path: 'home', component: HomeComponent },
+  { path: '', redirectTo: 'home' } // Wildcard route
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule {}
+
+
+---
+
+6️⃣ Lazy-Loaded Module
+- Improves performance by loading modules only when needed.
+
+
+const routes: Routes = [
+  { path: 'dashboard', loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule) }
+];
+
+
+- `DashboardModule` will only be loaded when the user visits `/dashboard`.
+
+---
+
+4. Advantages of Angular Modules
+ Code Organization– Keeps the application structured and maintainable.  
+ Reusability– Shared modules reduce duplicate code.  
+ Performance Optimization– Lazy loading speeds up initial loading.  
+ Separation of Concerns– Each module handles a specific part of the app.  
+ Easier Testing– Modules allow for isolated unit testing.  
+
+---
+
+5. Disadvantages of Angular Modules
+ Overhead in Small Projects– For very small apps, modules can feel unnecessary.  
+ Complexity in Large Apps– Managing multiple modules can become difficult.  
+ Extra Configuration Needed– Routing, providers, and lazy loading require setup.  
+
+---
+
+6. Angular Standalone Components (No Modules)
+Since Angular 14+, you can build apps without NgModules using Standalone Components.
+
+
+import { bootstrapApplication } from '@angular/platform-browser';
+import { AppComponent } from './app.component';
+
+bootstrapApplication(AppComponent);
+
+
+- Advantages of Standalone Components:
+  - No need to define `NgModule`.
+  - Reduces boilerplate.
+  - Works well for smaller applications.
+
+
+- Why NgModules Removed in Angular 14+?
+  - Prevents Tree Shaking – Imports the entire module, even if only a few components/services are used.
+  - Increases Bundle Size – Unused components/directives remain in the final build.
+  - Complex Dependency Management – Providers in NgModule can create unnecessary dependencies.
+  - Eager Loading Issues – If a module is imported in AppModule, it gets loaded even if not needed.
+  - Extra Boilerplate Code – Developers must declare, import, and export components manually.
+  - Slower Initial Loading – Modules increase the initial JavaScript bundle size.
+
+---
+
+7. Summary
+| Module Type              | Purpose |
+|--------------------------|------------------------------------------------|
+| Root Module (`AppModule`)| Bootstraps the app |
+| Feature Module           | Groups related functionality |
+| Shared Module            | Contains reusable components/pipes/directives |
+| Core Module              | Stores singleton services like authentication |
+| Routing Module           | Handles application routing |
+| Lazy-Loaded Module       | Loads modules only when required for performance |
+
+
+============================================================================================================================================
+
+# Components in angular
+
+- A Componentin Angular is the building block of an application. 
+- It defines the UI (template), behavior (class logic), and styles for a section of the app.
+
+---
+
+1. What is an Angular Component?
+A component is a TypeScript class decorated with `@Component`. It has:  
+- Template (HTML)→ Defines UI structure  
+- Class (TS)→ Defines behavior and logic  
+- Styles (CSS/SCSS)→ Defines appearance 
+- Unit testing (spec.ts) -> For unit testing
+
+- Ex:
+
+  import { Component } from '@angular/core';
+
+  @Component({
+    selector: 'app-root', // HTML tag to use this component
+    templateUrl: './app.component.html', // External HTML file
+    styleUrls: ['./app.component.css'] // External CSS file
+  })
+  export class AppComponent {
+    title = 'Angular Component Example';
+  }
+
+
+---
+
+2. Why Are Components Used?
+✅ Encapsulation– Each component is self-contained.  
+✅ Reusability– Can be used multiple times in different parts of the app.  
+✅ Modularity– Helps break down the app into small, manageable pieces.  
+✅ Separation of Concerns– Keeps UI (`template`) separate from logic (`class`).  
+✅ Data Binding– Supports easy interaction between UI and logic.  
+
+---
+
+3. Creating a Component
+- You can create a component manually or using Angular CLI.
+- ng generate component my-component
+- ng g c my-component
+
+- Creating component within a feature module via CLI:
+ng g c module-name/component-name
+
+This creates:
+
+my-component/
+│── my-component.component.ts  (Logic)
+│── my-component.component.html (Template)
+│── my-component.component.css  (Styles)
+│── my-component.component.spec.ts (Test)
+
+
+4. Manually Creating a Component
+Create a `my-component.component.ts` file:
+
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-my-component',
+  template: `<h2>Welcome to My Component</h2>`,
+  styles: [`h2 { color: blue; }`]
+})
+export class MyComponent {}
+
+Now, add `<app-my-component></app-my-component>` in `app.component.html` to use it.
+
+
+Note:
+- If a component is generated via, CLI, then its automatically registered in declarations array of app.module.ts.
+- For manually created compnent, we need to manually register it in app.module.ts.
+
+
+---
+
+4. Component Metadata (`@Component` Decorator)
+The `@Component` decorator configures the component.
+
+
+@Component({
+  selector: 'app-example', // Custom HTML tag for the component
+  template: `// html code`
+  or
+  templateUrl: './example.component.html', // External template file
+
+  styles: `h3 {
+    color: red;
+    font-size:x-large
+    }
+    p {
+      background-color: red;
+    }`
+  or
+  styleUrls: ['./example.component.css'], // External styles
+
+  // For Ngmodule less project (Angular 14+)
+  standalone: true/false // Optional: Enables Standalone Components (Angular 14+) For (Angular 19 Specifying it not needed)
+})
+
+- If using -no--standalone project in Angular 14+, needs to explicilty specify in the cmponents that,
+  standalone is false.
+
+
+Properties of `@Component`
+| Property      | Description |
+|---------------|------------|
+| `selector`    | HTML tag used to include the component |
+| `templateUrl` | External HTML file |
+| `template`    | Inline HTML template |
+| `styleUrls`   | External CSS/SCSS files |
+| `styles`      | Inline CSS styles |
+| `standalone`  | Enables Standalone Components (Angular 14+) |
+
+---
+
+5. Component Styling
+Angular components support:
+- Global CSS(applies everywhere).
+- Component-specific CSS(scoped to that component).
+- Encapsulation Modes.
+
+Encapsulation Modes
+| Mode                                   | Behavior |
+|----------------------------------------|----------|
+| `ViewEncapsulation.Emulated` (default) | CSS applies only to that component. |
+| `ViewEncapsulation.None`               | CSS is global. |
+| `ViewEncapsulation.ShadowDom`          | Uses Shadow DOM for true encapsulation. |
+
+
+Example:
+@Component({
+  selector: 'app-example',
+  templateUrl: './example.component.html',
+  styleUrls: ['./example.component.css'],
+  encapsulation: ViewEncapsulation.None
+})
+
+
+6. Selector
+- Custom HTML tag for the component
+- <app-header></app-header> whereever these selectors are used, it renders the html of that selector in specified place.
+- It can be named anything. But default naming convention is "prefix": "app" (which can be specified in angular.json) + "-" + component name (header)
+- Ex: ng g c footer -> Then default selector is "app-footer"
+
+i. Using selectors as an HTML element
+- In .ts file,
+    @Component (
+      {
+      selector:'app-first'
+      }
+    )
+- Now it can be used as <app-first></app-first>.
+
+- Best For:
+  - Reusable UI components (e.g., <app-header>, <app-footer>, <app-sidebar>).
+  - When the component represents a distinct UI block.
+
+
+ii. Using selectors as an attribute
+- In .ts file,
+    @Component (
+      {
+      selector:'[app-first]'
+      }
+    )
+- Now it cannnot be used as <app-first></app-first>. Instead it needs to be used as an attribute as follows.
+  <div app-first></div>
+
+- Best For:
+  - Directives or behaviors that should be applied to existing elements.
+  - When the component adds behavior but does not replace the element.
+
+
+- Real-World Use Case:
+  - Highlight text on hover:  <p appHighlight>Hover over me</p>
+  - Add a tooltip: <button appTooltip="Click me!">Info</button>
+
+
+iii. Using selectors as class
+  @Component (
+    {
+      selector:'.app-first'
+    }
+  )
+
+- Now it cannnot be used as <app-first></app-first>. Instead it needs to be used as an attribute as follows.
+<div class="app-first"></div>
+
+- Best For: 
+  - When you want to apply styles via a component without modifying the element structure.
+  - If you want multiple elements to behave the same way.
+
+
+- Real-World Use Case:
+Apply a reusable button design: <button class="app-button">Click Me</button>
+
+
+iv. Using selectors as an ID (Not Recommended)
+  @Component (
+    {
+      selector:'#app-first'
+    }
+  )
+
+- Now it cannnot be used as <app-first></app-first>. Instead it needs to be used as an attribute as follows.
+<div id="app-first"></div>
+
+- Why It's Rarely Used?
+  - ID selectors must be unique, so you can only use one per page.
+  - Angular components are meant to be reusable.
+
+- When Would This Be Useful?
+  - If you want to enforce that a component appears only once (like a global toast message).
+  - However, a service-based approach is a better alternative.
+
+Most of the time only selector as HTML element is used.
+
+
+---
+
 
 
 
@@ -711,3 +1163,4 @@ Note:
 
 // TODO:
 1) Demonstrate how angular is SPA?
+2) IN Angular 14+ (17) modules are not used. How to use standalone comp? Command to use modules in Ang 17 ... (Refer temp.txt)

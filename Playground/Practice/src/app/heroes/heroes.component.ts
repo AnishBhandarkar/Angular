@@ -5,7 +5,7 @@ import { Heroes } from '../models/heroes';
   selector: 'app-heroes',
   standalone: false,
   templateUrl: './heroes.component.html',
-  styleUrl: './heroes.component.css'
+  styleUrl: './heroes.component.css',
 })
 export class HeroesComponent {
   hero: Heroes = {
