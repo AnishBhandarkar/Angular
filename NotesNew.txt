@@ -18,6 +18,10 @@ Table of Contents:
 # Data binding in Angular
 # Directives in Angular.
 # @Input() and @Output() in Angular
+# Template Reference Variables in Angular
+# Why Not Use JS DOM Query Methods? instead of template variables?
+# How `document.querySelector()` Works in an Angular Application
+# @ViewChild & @ViewChildren in Angular
 
 
 
@@ -1786,6 +1790,541 @@ Now, in the parent:
 
 ===========================================================================================================================================
 
+# Template Reference Variables in Angular
+
+- A template reference variable in Angular is a way to get a reference to an HTML element or an Angular component inside the template. 
+- It allows direct interaction with the referenced element, component, or directive in the template without using component class properties.
+
+---
+
+Syntax
+A template reference variable is declared using the `#` symbol, followed by a variable name.
+
+html
+<input #myInput type="text">
+<button (click)="logValue(myInput.value)">Log Value</button>
+
+
+In the example above:
+- `#myInput` creates a reference to the `<input>` element.
+- `myInput.value` is accessed inside the `(click)` event handler.
+
+---
+
+Why is it Used?
+1. Accessing DOM elements directly
+2. Interacting with child components
+3. Accessing directive instances
+4. Passing elements/components to methods
+5. Working with forms (e.g., `ngForm`)
+6. Getting reference to built-in directives like `ngTemplateOutlet`
+
+---
+
+Where is it Used?
+Template reference variables are commonly used in:
+1. Forms - To get form control values
+2. Child components - To interact with child component methods and properties
+3. DOM elements - For direct manipulation of native elements
+4. Directives - To access instances of directives applied to elements
+5. Templates & ViewContainerRef - Used with `ngTemplateOutlet` for dynamic template rendering
+
+---
+
+How to Use Template Reference Variables?
+1. Accessing DOM Elements
+You can reference an input field and use its value in an event:
+
+html
+<input #username type="text">
+<button (click)="showUsername(username.value)">Show</button>
+
+
+
+showUsername(value: string) {
+  console.log(value);
+}
+
+
+---
+
+2. Accessing Child Components
+If you have a child component:
+
+
+@Component({
+  selector: 'app-child',
+  template: `<p>Child Component</p>`
+})
+export class ChildComponent {
+  greet() {
+    return "Hello from Child!";
+  }
+}
+
+
+You can access it from the parent template using a template reference variable:
+
+html
+<app-child #childComp></app-child>
+<button (click)="sayHello(childComp)">Click Me</button>
+
+
+
+sayHello(child: ChildComponent) {
+  console.log(child.greet());
+}
+
+
+---
+
+3. Accessing Directives
+If a directive is applied to an element, you can reference its instance:
+
+
+@Directive({
+  selector: '[appHighlight]'
+})
+export class HighlightDirective {
+  highlight() {
+    console.log("Element highlighted!");
+  }
+}
+
+
+In the template:
+
+html
+<p appHighlight #highlightDir>Highlighted text</p>
+<button (click)="highlightDir.highlight()">Highlight</button>
+
+
+---
+
+4. Using with Forms (`ngForm` & `ngModel`)
+In template-driven forms, `ngForm` can be referenced using a template variable:
+
+html
+<form #userForm="ngForm" (ngSubmit)="onSubmit(userForm)">
+  <input name="username" ngModel required>
+  <button type="submit">Submit</button>
+</form>
+
+
+
+onSubmit(form: NgForm) {
+  console.log(form.value);
+}
+
+
+---
+
+5. Using with `ngTemplateOutlet` for Dynamic Templates
+You can reference a `<ng-template>` and use it dynamically:
+
+html
+<ng-template #myTemplate>
+  <p>This is a template</p>
+</ng-template>
+
+<div *ngIf="showTemplate">
+  <ng-container *ngTemplateOutlet="myTemplate"></ng-container>
+</div>
+
+
+---
+
+Scope of Template Reference Variables
+Template reference variables only work inside the template they are defined in. They cannot be accessed in the component TypeScript file directly.
+
+---
+
+How it Differs from ViewChild?
+| Feature      | Template Reference Variable       | `@ViewChild` |
+|--------------|-----------------------------------|-------------|
+| Access Scope | Only within the template          | Accessible in TypeScript |
+| Use Case     | Simple DOM manipulation, forms    | Advanced interactions with child components |
+| Syntax       | `#varName` in HTML                | `@ViewChild(Component/Directive)` in TS |
+| Lifecycle    | Available in template immediately | Available after `ngAfterViewInit` |
+
+Example:
+Using `@ViewChild`:
+
+<input type="text" #myInput value="Shatake samana">
+
+@ViewChild('myInput') inputElement!: ElementRef;
+
+ngAfterViewInit() {
+  console.log(this.inputElement.nativeElement.value);
+}
+
+
+- While `#myInput` works only inside the template.
+- By default when u access it using ViewChild, its value is available in ngAfterViewInit.
+
+===========================================================================================================================================
+
+# Why Not Use JS DOM Query Methods? instead of template variables?
+
+- Using JavaScript DOM query methods like `document.querySelector()` or `document.getElementById()` might seem like an alternative to template reference variables (`#var`), 
+  but Angular encourages using template reference variables for several reasons.
+
+---
+
+Why Not Use JS DOM Query Methods?
+1. Not Angular-friendly (Bypasses Angular's Rendering Cycle)
+   - Angular has its own rendering and change detection system. 
+   - Directly querying the DOM bypasses it, which can lead to inconsistencies and unexpected behaviors.
+   - Example:
+     
+     document.querySelector('input').value = 'New Value';
+     
+     If Angular updates the value later, your change might be overridden.
+
+2. Not Scoped to the Component
+   - `document.querySelector()` and similar methods operate on the entire document, meaning:
+     - If you have multiple instances of the same component, these queries might select the wrong element.
+     - There's a risk of affecting unintended elements.
+
+3. Does Not Work Well with Dynamic Elements
+   - If an element is added or removed dynamically (e.g., using `*ngIf`), the reference might be invalid.
+   - Template reference variables automatically update with the view lifecycle.
+
+4. Performance Overhead
+   - DOM queries (`querySelector`, `getElementById`) require searching the entire DOM tree, which can be slow, especially for large applications.
+   - Angular's template reference variables do not perform global DOM searches, making them more efficient.
+
+5. Harder to Maintain and Debug
+   - Using `#var` makes it clear which elements are referenced, making the template easier to read.
+   - Using `document.querySelector()` scatters logic across multiple places, making maintenance harder.
+
+---
+
+When Can You Use DOM Methods?
+1. When dealing with third-party libraries that manipulate the DOM (e.g., jQuery, Leaflet maps).
+2. When accessing global elements, such as `document.body` or `window`.
+
+---
+
+Better Alternative: `@ViewChild`
+If you need to access an element in the TypeScript file, `@ViewChild` is a better alternative to `document.querySelector()`.
+
+
+@ViewChild('myInput') inputRef!: ElementRef;
+
+ngAfterViewInit() {
+  this.inputRef.nativeElement.value = 'Updated by ViewChild';
+}
+
+
+This ensures that:
+- The reference is scoped to the component.
+- It updates when the view is initialized.
+
+===========================================================================================================================================
+
+# How `document.querySelector()` Works in an Angular Application
+
+- `document.querySelector()` is a native JavaScript method, which means it does not respect Angular’s component boundaries.
+- It scans the entire DOM tree starting from `document`, not just the component where it's called.
+- This means if multiple components have similar elements (e.g., multiple `<input>` fields), `querySelector()` might select the first matching elementin the whole document, even if it's from a different component.
+
+- i.e If in a page there are multiple components and from 1 of the component if i do doc.querySe..() then it searchs all components in that page instead of the component from where i wrote doc.querySe..()
+
+#Example: Searching the Whole Document
+
+@Component({
+  selector: 'app-child',
+  template: `<input type="text" value="Child Component">`
+})
+export class ChildComponent implements AfterViewInit {
+  ngAfterViewInit() {
+    const input = document.querySelector('input'); // Selects the first <input> in the entire page!
+    console.log(input?.value); // Might log an input from a different component!
+  }
+}
+
+- If another component has an `<input>`, `document.querySelector('input')` might select that one instead of the local one.
+
+---
+
+How to Search Only Within a Specific Component?
+#1️⃣ Use `this.elementRef.nativeElement.querySelector()`
+Instead of `document.querySelector()`, use Angular's `ElementRef` to limit the search to the current component only.
+
+
+import { Component, ElementRef, AfterViewInit } from '@angular/core';
+
+@Component({
+  selector: 'app-child',
+  template: `<input type="text" value="Child Component">`
+})
+export class ChildComponent implements AfterViewInit {
+  constructor(private elRef: ElementRef) {}
+
+  ngAfterViewInit() {
+    const input = this.elRef.nativeElement.querySelector('input');
+    console.log(input?.value); // Selects only the input within this component
+  }
+}
+
+✅ This ensures only elements inside this component'sDOM are selected.
+
+---
+
+#2️⃣ Use `@ViewChild()` (Preferred in Angular)
+Instead of querying manually, use Angular’s `@ViewChild()`:
+
+
+import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+
+@Component({
+  selector: 'app-child',
+  template: `<input #myInput type="text" value="Child Component">`
+})
+export class ChildComponent implements AfterViewInit {
+  @ViewChild('myInput') inputRef!: ElementRef;
+
+  ngAfterViewInit() {
+    console.log(this.inputRef.nativeElement.value); // Works within the component scope
+  }
+}
+
+✅ This is faster and safersince Angular manages it internally.
+
+---
+
+Final Conclusion
+| Method                                     | Scope                                 | Works in Angular Lifecycle?| Performance|
+|--------------------------------------------|---------------------------------------|--------|----------------|
+| `document.querySelector()`                 | Searches the whole page               | ❌ No  | 🚫 Slower (global search) |
+| `this.elRef.nativeElement.querySelector()` | Searches only inside the component    | ✅ Yes | ✅ Faster (local search) |
+| `@ViewChild()`                             | Direct reference inside the component | ✅ Yes | 🚀 Best performance |
+
+- Avoid `document.querySelector()` unless absolutely necessary.
+- It can cause unexpected behavior in an Angular app with multiple components. 
+- Instead, use `@ViewChild()` or `ElementRef` for better performance and scoping.
+
+===========================================================================================================================================
+
+# @ViewChild & @ViewChildren in Angular
+
+- Both `@ViewChild` and `@ViewChildren` are decorators used in Angular to get a reference to elements, components, or directives in the view (DOM) of the current component. 
+- They are commonly used to interact with child elements programmatically.
+
+---
+
+1️. @ViewChild()
+`@ViewChild` is used to get a reference to a single element, component, or directive within the template.
+
+Syntax:
+@ViewChild(selector, { static: boolean }) variableName!: Type; // static - false by default.
+
+- selector → The reference name (`#var`), component class, directive class, or a template reference variable.
+- static (optional) → Determines when the reference is available (during `ngOnInit` or after `ngAfterViewInit`).
+- variableName → The local variable in the component to store the reference.
+- Type → The type of the referenced element (e.g., `ElementRef`, component, directive).
+
+---
+
+Example 1: Accessing an HTML Element
+html
+<input #myInput type="text" value="Hello">
+<button (click)="changeValue()">Change Value</button>
+
+
+import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+
+@Component({
+  selector: 'app-demo',
+  templateUrl: './demo.component.html',
+})
+export class DemoComponent implements AfterViewInit {
+  @ViewChild('myInput') inputRef!: ElementRef;
+
+  ngAfterViewInit() {
+    console.log(this.inputRef.nativeElement.value); // Logs "Hello"
+  }
+
+  changeValue() {
+    this.inputRef.nativeElement.value = "Updated!";
+  }
+}
+
+✅ Why Use `@ViewChild` Here?
+- Directly manipulates the DOM inside the component.
+- More efficient than `document.querySelector()`.
+
+---
+
+Example 2: Accessing a Child Component
+#Child Component
+
+@Component({
+  selector: 'app-child',
+  template: `<p>Child Component</p>`
+})
+export class ChildComponent {
+  sayHello() {
+    return "Hello from Child!";
+  }
+}
+
+#Parent Component
+html
+<app-child #childComp></app-child>
+<button (click)="callChildMethod()">Call Child Method</button>
+
+
+import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { ChildComponent } from './child.component';
+
+@Component({
+  selector: 'app-parent',
+  templateUrl: './parent.component.html',
+})
+export class ParentComponent implements AfterViewInit {
+  @ViewChild('childComp') child!: ChildComponent;
+
+  ngAfterViewInit() {
+    console.log(this.child.sayHello()); // Logs: "Hello from Child!"
+  }
+
+  callChildMethod() {
+    alert(this.child.sayHello());
+  }
+}
+
+✅ Why Use `@ViewChild` Here?
+- Allows direct access to child component methods and properties.
+- Useful when child components don’t need to notify the parent.
+
+---
+
+When to Set `static: true` or `static: false`?
+| Value             | When Available?        | Use Case |
+|-------------------|------------------------|--------------|
+| `true`            | In `ngOnInit()`        | When the element/component is not dynamically added (e.g., always present in the template). |
+| `false` (default) | In `ngAfterViewInit()` | When the element/component might be dynamically added or removed (e.g., inside `*ngIf`). |
+
+✅ Example where `static: true` is needed:
+html
+<input #myInput *ngIf="showInput">
+
+
+@ViewChild('myInput', { static: true }) inputRef!: ElementRef;
+ngOnInit() {
+  console.log(this.inputRef.nativeElement); // Works because static: true
+}
+
+- In short if u want to access it within ngOnInit, set static to true.
+
+
+---
+
+2. @ViewChildren()
+`@ViewChildren` is used when you need to get multiple instances of elements, components, or directives.
+
+Syntax:
+@ViewChildren(selector) variableName!: QueryList<Type>;
+
+- Returns a QueryList, which is similar to an array but is reactive and updates when the view changes.
+
+---
+
+Example: Accessing Multiple Elements
+html
+<p #para>First Paragraph</p>
+<p #para>Second Paragraph</p>
+<button (click)="logTexts()">Log Texts</button>
+
+
+import { Component, ViewChildren, QueryList, ElementRef, AfterViewInit } from '@angular/core';
+
+@Component({
+  selector: 'app-demo',
+  templateUrl: './demo.component.html',
+})
+export class DemoComponent implements AfterViewInit {
+  @ViewChildren('para') paragraphs!: QueryList<ElementRef>;
+
+  ngAfterViewInit() {
+    this.logTexts();
+  }
+
+  logTexts() {
+    this.paragraphs.forEach((p) => console.log(p.nativeElement.textContent));
+  }
+}
+
+✅ Why Use `@ViewChildren` Here?
+- `@ViewChild` only selects one element, but `@ViewChildren` retrieves all matching elements.
+
+---
+
+Example: Accessing Multiple Child Components
+#Child Component
+
+@Component({
+  selector: 'app-child',
+  template: `<p>Child Component</p>`
+})
+export class ChildComponent {
+  greet() {
+    return "Hello from Child!";
+  }
+}
+
+#Parent Component
+html
+<app-child></app-child>
+<app-child></app-child>
+<app-child></app-child>
+<button (click)="callAllChildren()">Call All</button>
+
+
+import { Component, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
+import { ChildComponent } from './child.component';
+
+@Component({
+  selector: 'app-parent',
+  templateUrl: './parent.component.html',
+})
+export class ParentComponent implements AfterViewInit {
+  @ViewChildren(ChildComponent) children!: QueryList<ChildComponent>;
+
+  ngAfterViewInit() {
+    this.callAllChildren();
+  }
+
+  callAllChildren() {
+    this.children.forEach(child => console.log(child.greet()));
+  }
+}
+
+✅ Why Use `@ViewChildren` Here?
+- Allows accessing all instances of a component.
+- Useful for managing multiple child components dynamically.
+
+---
+
+Key Differences Between `@ViewChild` and `@ViewChildren`
+| Feature      | `@ViewChild`                         | `@ViewChildren` |
+|--------------|--------------------------------------|----------------|
+| Returns      | A single reference                   | A `QueryList` (like an array) |
+| Selects      | First matching element/component     | All matching elements/components |
+| Use Case     | When interacting with a single child | When interacting with multiple children |
+| Available in | `ngAfterViewInit()`                  | `ngAfterViewInit()` |
+| Performance  | More efficient for single elements   | Used for bulk operations |
+
+---
+
+Final Thoughts
+- Use `@ViewChild` when working with a single element or component.
+- Use `@ViewChildren` when working with multiple elements or components.
+- Avoid `document.querySelector()`; use these Angular mechanisms for better performance and maintainability.
+
+===========================================================================================================================================
 
 
 

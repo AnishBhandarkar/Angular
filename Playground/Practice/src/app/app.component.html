@@ -5,6 +5,11 @@
 <button>App</button>
 
 
+
 <ul [ngClass]="{active: isActive}" [ngStyle]="{color: 'red', 'font-size.px':'60'}">
     <li *ngFor="let item of items; index as i">{{i}} - {{item}}</li>
 </ul>
+
+
+<input type="text" #inp placeholder="enter name">
+<button (click)="btnClicked($event)">Call</button>
