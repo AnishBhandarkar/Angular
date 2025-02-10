@@ -6,14 +6,14 @@ import { AppComponent } from './app.component';
 import { HeroesComponent } from './heroes/heroes.component';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from './header/header.component';
-import { HighlightComponent } from './highlight/highlight.component';
+import { HighlightDirective } from '../highlight.directive';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeroesComponent,
     HeaderComponent,
-    HighlightComponent
+    HighlightDirective
   ],
   imports: [
     BrowserModule,

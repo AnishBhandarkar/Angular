@@ -9,4 +9,10 @@ import { Component, ViewEncapsulation } from '@angular/core';
 })
 export class AppComponent {
   title = 'Tour of Heroes';
+
+  items = ['Angular', 'React', 'Vue'];
+
+  isActive = true;
+
+  show = true;
 }

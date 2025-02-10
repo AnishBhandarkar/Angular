@@ -15,6 +15,9 @@ Table of Contents:
 # ng serve vs. ng build:
 # Modules in angular
 # Components in angular
+# Data binding in Angular
+# Directives in Angular.
+# @Input() and @Output() in Angular
 
 
 
@@ -1123,7 +1126,7 @@ iv. Using selectors as an ID (Not Recommended)
 Most of the time only selector as HTML element is used.
 
 
----
+============================================================================================================================================
 
 # Data binding in Angular
 
@@ -1322,6 +1325,466 @@ Final Thoughts
 -  Use property binding (`[ ]`) for setting attributes dynamically.  
 -  Use event binding (`( )`) for handling user interactions.  
 -  Use two-way binding (`[()]`) when you need to sync user input with component variables.  
+
+
+============================================================================================================================================
+
+# Directives in Angular.
+---
+
+1. What are Directives in Angular?
+Directives are special instructions in the DOM that enhance functionality by modifying elements, components, or behavior dynamically.
+
+Angular provides three types of directives:
+1. Component Directives (Technically a directive with a template)
+2. Structural Directives (Modify the DOM structure)
+3. Attribute Directives (Modify the appearance or behavior of elements)
+
+---
+
+2. Why Are Directives Needed?
+- To manipulate DOM elements dynamically.
+- To apply logic-based conditions for rendering elements.
+- To change the appearance or behavior of elements.
+- To reuse behaviors across multiple components without duplication.
+- To create dynamic UI elements.
+
+---
+
+3. Types of Directives in Angular
+(A) Component Directives
+- Components are a special type of directive with a template.
+- Every Angular component is a directive but with an associated HTML view (template).
+- Example:
+  
+  import { Component } from '@angular/core';
+
+  @Component({
+    selector: 'app-example',
+    template: '<h1>Hello from Component Directive!</h1>',
+    styles: ['h1 { color: blue; }']
+  })
+  export class ExampleComponent {}
+  
+- Components are the most commonly used directive type.
+
+---
+
+(B) Structural Directives
+Structural directives modify the DOM structure by adding, removing, or manipulating elements.
+
+#Common Structural Directives
+1. `*ngIf` - Adds or removes elements based on a condition.
+2. `*ngFor` - Repeats an element for each item in a collection.
+3. `*ngSwitch` - Conditionally renders elements based on a switch case.
+
+#1. `*ngIf`
+- Used to conditionally display elements.
+- Example:
+  html
+  <p *ngIf="isVisible">This paragraph is conditionally visible.</p>
+  
+  
+  isVisible = true;
+  
+- You can use `else`:
+  html
+  <p *ngIf="isVisible; else elseBlock">This is visible</p>
+  <ng-template #elseBlock>
+    <p>This is hidden</p>
+  </ng-template>
+  
+
+#2. `*ngFor`
+- Used to loop through a collection.
+- Example:
+  html
+  <ul>
+    <li *ngFor="let item of items; index as i"> {{ i }} - {{ item }}</li>
+    or
+    <li *ngFor="let item of items; let i = index">{{i}} - {{item}}</li>
+  </ul>
+  
+  
+  items = ['Angular', 'React', 'Vue'];
+
+- index is a special template variable provided by *ngFor. 
+- It represents the zero-based index of the current item in the items array as it is being iterated over.
+  
+
+#3. `*ngSwitch`
+- Used when multiple conditions need to be checked.
+- Example:
+  html
+  <div [ngSwitch]="fruit">
+    <p *ngSwitchCase="'Apple'">🍏 Apple</p>
+    <p *ngSwitchCase="'Banana'">🍌 Banana</p>
+    <p *ngSwitchDefault>🥝 Unknown fruit</p>
+  </div>
+  
+  
+  fruit = 'Apple';
+
+
+---
+
+Why `ngSwitch` Uses `[ngSwitch]` Instead of `*ngSwitch`?
+1. `*` (asterisk) is a shorthand for `ng-template` wrapping 
+   - Structural directives like `*ngIf` and `*ngFor` add/remove entire elements dynamically.  
+   - They need to wrap the entire element inside an implicit `<ng-template>`.
+   - Example of `*ngIf` (expanded form):
+     
+     <ng-template [ngIf]="condition">
+       <p>This element will be added/removed</p>
+     </ng-template>
+     
+
+2. `ngSwitch` is a parent container, not a template directive 
+   - `ngSwitch` does not directly add/remove elements itself.
+   - Instead, it controls its child directives (`*ngSwitchCase`, `*ngSwitchDefault`), which are structural directives.
+   - `ngSwitch` acts more like a controller, so it is used as `[ngSwitch]` (a property binding), not `*ngSwitch`.
+
+
+- What Happens Behind the Scenes?
+  - `ngSwitch` only tracks the value (`fruit`).
+  - `*ngSwitchCase` and `*ngSwitchDefault` handle adding/removing elements.
+
+
+- Since `ngSwitch` does not directly add/remove elements, it does not use `*`. 
+- Instead, it is used as a property binding `[ngSwitch]`, while its child directives (`*ngSwitchCase`) do the actual structural manipulation.
+
+
+---
+
+(C) Attribute Directives
+Attribute directives change the behavior or appearance of an element.
+
+#Common Attribute Directives
+1. `ngClass` - Adds/removes classes dynamically.
+2. `ngStyle` - Applies inline styles dynamically.
+3. Custom Attribute Directives - You can define your own.
+
+#1. `ngClass`
+- Used to dynamically apply classes.
+- Example:
+  <p [ngClass]="{active: isActive, error: hasError}">Styled Text</p>
+  
+  isActive = true;
+  hasError = false;
+  
+
+#2. `ngStyle`
+- Used to dynamically apply styles.
+- Example:
+  html
+  <p [ngStyle]="{'color': textColor, 'font-size.px': fontSize}">Styled Text</p>
+  
+  
+  textColor = 'blue';
+  fontSize = 20;
+
+- 2 ways:
+  i. [ngStyle]="{color: 'red', 'font-size':'x-large'}">
+  ii. [ngStyle]="{color: 'red', fontSize:'x-large'}">
+  
+
+#3. Custom Attribute Directive
+- Example: A directive that changes background color on hover.
+  
+  import { Directive, ElementRef, HostListener, Renderer2 } from '@angular/core';
+
+  @Directive({
+    selector: '[appHighlight]'
+  })
+  export class HighlightDirective {
+    constructor(private el: ElementRef, private renderer: Renderer2) {}
+
+    @HostListener('mouseenter') onMouseEnter() {
+      this.renderer.setStyle(this.el.nativeElement, 'background-color', 'yellow');
+    }
+
+    @HostListener('mouseleave') onMouseLeave() {
+      this.renderer.removeStyle(this.el.nativeElement, 'background-color');
+    }
+  }
+  
+  - Usage:
+    html
+    <p appHighlight>Hover over me!</p>
+    
+
+---
+
+4. Creating a Custom Directive
+1. Generate a directive:
+   sh
+   ng generate directive myDirective
+   or
+   ng g d myDirective
+   
+2. Modify the directive (`my-directive.directive.ts`):
+   
+   import { Directive, ElementRef, Renderer2 } from '@angular/core';
+
+   @Directive({
+     selector: '[appMyDirective]'
+   })
+   export class MyDirective {
+     constructor(private el: ElementRef, private renderer: Renderer2) {
+       this.renderer.setStyle(this.el.nativeElement, 'color', 'red');
+     }
+   }
+
+3. Register in app.module.ts declarations array
+   
+4. Use it:
+   html
+   <p appMyDirective>This text will be red.</p>
+   
+
+---
+
+5. Understanding `@Directive` Decorator
+- The `@Directive` decorator defines a directive.
+- It takes a configuration object with a `selector`:
+  
+  @Directive({
+    selector: '[appExample]'
+  })
+  
+- Selectors are usually attribute selectors (`[appExample]`).
+
+- Naming convention prefix(from angular.json, default is 'app') + directive name during creation
+
+---
+
+6. Directive Lifecycle Hooks
+Like components, directives have lifecycle hooks:
+| Hook              | Description |
+|-------------------|------------|
+| `ngOnInit`        | Runs when the directive is initialized |
+| `ngOnChanges`     | Runs when input properties change |
+| `ngDoCheck`       | Runs during change detection |
+| `ngAfterViewInit` | Runs after child views initialize |
+| `ngOnDestroy`     | Runs before the directive is destroyed |
+
+Example:
+
+ngOnInit() {
+  console.log("Directive Initialized");
+}
+
+
+---
+
+7. Directive vs. Component
+| Feature             | Directive     | Component |
+|---------------------|---------------|-----------|
+| View (Template)     | No            | Yes |
+| Use Case            | Behavior      | UI & Behavior |
+| Selector Type       | `[attribute]` | `app-component` |
+| Lifecycle Hooks     | Yes           | Yes |
+
+---
+
+8. Best Practices
+- Use components over directives when a UI is needed.
+- Follow naming conventions (`appHighlight`, `appMyDirective`).
+- Use Renderer2 instead of direct DOM manipulation.
+- Optimize change detection for performance.
+
+
+---
+
+9. How Multiple Directives Work Together
+
+- You can apply multiple attribute directives and even mix any 1 structural directives on a single element (with some limitations).
+<p appHighlight appBold [ngClass]="{'active': isActive}" *ngIf="isVisible">Styled Text</p> // correct
+
+
+- Multiple Structural Directives on the Same Element (Not Allowed)
+<p *ngIf="isVisible" *ngFor="let item of items">{{ item }}</p>
+
+- Instaed use ng-container to combine multiple structural directives.:
+<ng-container *ngIf="isVisible">
+  <p *ngFor="let item of items">{{ item }}</p>
+</ng-container>
+
+============================================================================================================================================
+
+# @Input() and @Output() in Angular 
+
+- Both @Input() and @Output() are decorator functions.
+- A decorator is a special type of function in TypeScript that allows modifying the behavior of a class, method, property, or accessor dynamically.
+- Used for communication between a parent and child component.
+
+- What is parent and child component?
+  - If a cmponent's selector is used as an HTML element in the html of another component.
+  - Child component
+    @Component({
+      selector: 'app-child',
+      template: `<p>Received from parent: {{ data }}</p>`
+    })
+    export class ChildComponent {}
+
+  - Parent component
+    @Component({
+      selector: 'app-parent',
+      template: `<app-child></app-child>`
+    })
+    export class ParentComponent {}
+
+
+---
+
+1. What is @Input()? 
+- `@Input()` is used to pass data from a  parent component to a  child component .
+
+- How Does @Input() Work? 
+  - It marks a  property in a child component as input.
+  - The parent component can bind values to this property.
+
+- Usage Example 
+# 1. Parent to Child Data Passing 
+> Child Component (child.component.ts) 
+
+import { Component, Input } from '@angular/core';
+
+@Component({
+  selector: 'app-child',
+  template: `<p>Received from parent: {{ data }}</p>`
+})
+export class ChildComponent {
+  @Input() data: string = '';  // Marking 'data' as an input property
+}
+
+> Parent Component (parent.component.html) 
+
+<app-child [data]="'Hello from Parent'"></app-child>
+
+- Here, `[data]="'Hello from Parent'"` binds the value to `@Input() data` in the child.
+
+# 2. Using @Input with Aliases 
+You can change the input property name in the child using an alias:
+
+@Input('aliasName') data: string = '';
+
+Now, in the parent:
+
+<app-child [aliasName]="'Hello'"></app-child>
+
+
+# 3. Using @Input with Setter 
+You can use a setter function to process the data before using it:
+
+@Input()
+set data(value: string) {
+  this.processedData = value.toUpperCase();
+}
+processedData: string = '';
+
+---
+
+2. What is @Output()? 
+`@Output()` is used to send data  from a child component to a parent component using  EventEmitter .
+
+How Does @Output() Work? 
+- It marks a  property in a child component as an output event.
+- The child component emits data when an event occurs.
+- The parent listens to this event and gets the emitted value.
+
+Usage Example 
+# 1. Child to Parent Communication 
+Child Component (child.component.ts) 
+
+import { Component, Output, EventEmitter } from '@angular/core';
+
+@Component({
+  selector: 'app-child',
+  template: `<button (click)="sendMessage()">Send Data</button>`
+})
+export class ChildComponent {
+  @Output() messageEvent = new EventEmitter<string>();
+
+  sendMessage() {
+    this.messageEvent.emit('Hello from Child');
+  }
+}
+
+Parent Component (parent.component.html) 
+
+<app-child (messageEvent)="receiveMessage($event)"></app-child>
+<p>Received from child: {{ childMessage }}</p>
+
+Parent Component (parent.component.ts) 
+
+export class ParentComponent {
+  childMessage: string = '';
+
+  receiveMessage(msg: string) {
+    this.childMessage = msg;
+  }
+}
+
+Here,  
+- `(messageEvent)="receiveMessage($event)"` binds the child’s output event to the parent’s method.
+- `this.messageEvent.emit('Hello from Child')` emits data from child to parent.
+
+# 2. Using @Output with Aliases 
+
+@Output('aliasName') messageEvent = new EventEmitter<string>();
+
+Now, in the parent:
+
+<app-child (aliasName)="receiveMessage($event)"></app-child>
+
+---
+
+ Key Differences Between @Input and @Output 
+| Feature       | @Input()                                   | @Output() |
+|---------------|--------------------------------------------|-----------|
+| Purpose       | Passes data from parent to child           | Sends data from child to parent |
+| Data Type     | Any (string, number, object, etc.)         | EventEmitter instance |
+| Direction     | Unidirectional (Parent → Child)            | Unidirectional (Child → Parent) |
+| How It Works  | Property binding `[]`                      | Event binding `()` |
+| Example Usage | `<app-child [data]="'Hello'"></app-child>` | `<app-child (messageEvent)="handleEvent($event)"></app-child>` |
+
+---
+
+ Where Are @Input() and @Output() Used? 
+ 1. Reusable Components 
+- Example: A  button component that gets its label via `@Input()` and emits a click event via `@Output()`.
+
+ 2. Form Components 
+- Example: A  custom input field that receives a default value (`@Input()`) and emits changes (`@Output()`).
+
+ 3. Dynamic UI Components 
+- Example: A  modal component where:
+  - `@Input()` receives  title/content .
+  - `@Output()` emits an  event when closed .
+
+---
+
+ When Not to Use @Input() and @Output()? 
+1.  If you need shared state across multiple components  
+   - Use a service with RxJS BehaviorSubject instead.
+  
+2.  If components are deeply nested  
+   - Avoid too much `@Input()` and `@Output()` chaining.
+   - Use  state management libraries (NgRx, Akita) .
+
+3.  If the data is complex and large  
+   - Consider using a service for better performance.
+
+---
+
+ Conclusion 
+-  @Input() → Used for  parent-to-child communication.
+-  @Output() → Used for  child-to-parent communication.
+- They are decorator functions , modifying component properties.
+-  Use them when components need to communicate without a service .
+
+===========================================================================================================================================
 
 
 
