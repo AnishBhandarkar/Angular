@@ -1125,6 +1125,204 @@ Most of the time only selector as HTML element is used.
 
 ---
 
+# Data binding in Angular
+
+ Data Binding in Angular (Detailed Explanation)  
+
+ What is Data Binding?  
+- Data binding in Angular is the mechanism that synchronizes data between the  model (TypeScript code) and the  view (HTML template) . 
+- It allows dynamic updates in the UI whenever the data changes in the component, and vice versa.  
+
+This eliminates the need for  manually querying the DOM and updating elements (as done in vanilla JavaScript or jQuery).  
+
+---
+
+I. Why is Data Binding Needed?  
+1.  Dynamic UI Updates : Automatically updates the view when the data changes.  
+2.  Better Code Maintainability : No need to manually modify the DOM.  
+3.  Performance Optimization : Angular’s change detection ensures efficient updates.  
+4.  Two-way Communication : Allows user inputs to be reflected in the component variables.  
+5.  Simplifies Complex Applications : Managing UI state across components becomes easier.  
+
+---
+
+II. Types of Data Binding in Angular  
+
+Angular provides  four types of data binding:  
+
+| Type              | Direction        | Symbol        | Use Case |
+|-------------------|------------------|---------------|-----------|
+|  Interpolation    | Component → View | `{{}}`        | Display dynamic values in HTML |
+|  Property Binding | Component → View | `[ ]`         | Bind component properties to element attributes |
+|  Event Binding    | View → Component | `( )`         | Listen to events and execute component methods |
+|  Two-Way Binding  | Component ⇆ View | `[(ngModel)]` | Sync data between UI and component |
+
+---
+
+1. Interpolation (`{{ }}`) - One-Way Binding (Component → View)  
+- Used to  display data dynamically in the template.  
+- Only works with string-based values (numbers, booleans, objects must be converted to strings). 
+- you can write any valid TypeScript expression inside it. 
+- However, the final result must be something that can be converted to a string, because interpolation sets the text content of an HTML element.
+- Angular automatically converts them to strings when using interpolation.
+- Uses  double curly braces `{{ }}` to embed expressions inside HTML.  
+
+- Example  
+  Component (TypeScript) :
+  export class AppComponent {
+    username: string = "Anish Bhandarkar";
+  }
+
+  Template (HTML):
+  <h1>Welcome, {{ username }}</h1>
+
+  Rendered Output:
+  <h1>Welcome, Anish Bhandarkar</h1>
+
+---
+
+2. Property Binding (`[ ]`) - One-Way Binding (Component → View)  
+- Used to  bind a component property to an HTML element's property/attribute.  
+- Uses  square brackets `[ ]` .  
+- Unlike interpolation, it  works with all data types (numbers, booleans, objects, arrays, etc.) .  
+
+- Example  
+  Component (TypeScript):
+  export class AppComponent {
+    imageUrl: string = "assets/profile.jpg";
+  }
+
+  Template (HTML):
+  <img [src]="imageUrl" alt="Profile Image">
+
+  Equivalent HTML Output:
+  <img src="assets/profile.jpg" alt="Profile Image">
+
+
+ Difference Between Interpolation and Property Binding 
+| Feature       | Interpolation (`{{}}`)    | Property Binding (`[ ]`) |
+|---------------|---------------------------|----------------------|
+|  Binding Type | Binds as text content     | Binds as an actual property |
+|  Works With   | Only strings              | All types (booleans, numbers, objects, etc.) |
+|  Use Case     | Text inside HTML elements | Dynamic attribute values (like `src`, `disabled`, `value`) |
+
+---
+
+ 3. Event Binding (`( )`) - One-Way Binding (View → Component)  
+- Used to  isten to user events (click, keypress, mouseover, input, change, etc.).  
+- Uses parentheses `( )` around the event name.  
+- Calls a method in the component when the event occurs.  
+
+-Example  
+ Component (TypeScript) :
+  export class AppComponent {
+    count: number = 0;
+
+    increment() {
+      this.count++;
+    }
+  }
+
+  Template (HTML) :
+  <button (click)="increment()">Click Me</button>
+  <p>Count: {{ count }}</p>
+
+-Behavior 
+  - When the button is clicked, the `increment()` method runs.  
+  - `count` increases and the new value is reflected in the UI.  
+
+---
+
+4. Two-Way Binding (`[()]`) - (Component ⇆ View)  
+-  Combines Property Binding (`[ ]`) and Event Binding (`( )`) .  
+- Uses  banana-in-a-box syntax `[()]`.  
+- Mostly used for  form inputs (`<input>`, `<textarea>`, `<select>`, etc.).  
+- Requires `FormsModule` in `app.module.ts`.  
+
+-Example :
+ Component (TypeScript): 
+  export class AppComponent {
+    username: string = "";
+  }
+
+  Template (HTML) :
+  <input [(ngModel)]="username" placeholder="Enter your name">
+  <p>Hello, {{ username }}</p>
+
+-Behavior 
+  - As the user types in the input, `username` updates in real time.  
+  - The `{{ username }}` also updates dynamically.  
+
+- Module Configuration (app.module.ts) 
+  import { NgModule } from '@angular/core';
+  import { FormsModule } from '@angular/forms';
+
+  @NgModule({
+    imports: [FormsModule]
+  })
+  export class AppModule { }
+
+
+---
+
+ Other Advanced Data Binding Techniques  
+
+ 5. Attribute Binding (`[attr.]`)  
+- Binds values to HTML attributes that are not standard properties.  
+- Example: `aria-label`, `data-*`, `role`, `colspan`.  
+
+<button [attr.aria-label]="'Submit Button'">Submit</button>
+
+
+ 6. Class Binding (`[class.]`)  
+- Dynamically applies CSS classes.  
+
+<p [class.active]="isActive">This text changes color</p>
+
+
+isActive = true;
+
+
+ 7. Style Binding (`[style.]`)  
+- Dynamically applies inline styles.  
+
+<p [style.color]="isRed ? 'red' : 'black'">Styled Text</p>
+
+
+isRed = true;
+
+
+8. bind- Syntax:
+- Old syntax of alternative way of property binding.
+- bind-*
+- Ex:
+  <img bind-src="imageUrl">
+  // same as,
+  <img [src]="imageUrl">
+
+
+---
+
+Summary Table  
+
+| Type               | Syntax     | Direction        | Example |
+|--------------------|------------|------------------|---------|
+|  Interpolation     | `{{ }}`    | Component → View | `<p>{{ username }}</p>` |
+|  Property Binding  | `[ ]`      | Component → View | `<img [src]="imageUrl">` |
+|  Event Binding     | `( )`      | View → Component | `<button (click)="increment()">` |
+|  Two-Way Binding   | `[()]`     | Component ⇆ View | `<input [(ngModel)]="username">` |
+|  Attribute Binding | `[attr.]`  | Component → View | `<button [attr.aria-label]="'Submit'">` |
+|  Class Binding     | `[class.]` | Component → View | `<p [class.active]="isActive">` |
+|  Style Binding     | `[style.]` | Component → View | `<p [style.color]="'red'">` |
+
+---
+
+Final Thoughts  
+-  Use interpolation (`{{ }}`) for inline text content.  
+-  Use property binding (`[ ]`) for setting attributes dynamically.  
+-  Use event binding (`( )`) for handling user interactions.  
+-  Use two-way binding (`[()]`) when you need to sync user input with component variables.  
+
 
 
 
