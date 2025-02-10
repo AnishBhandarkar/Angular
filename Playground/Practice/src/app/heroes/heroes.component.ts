@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Heroes } from '../models/heroes';
 
 @Component({
@@ -12,4 +12,6 @@ export class HeroesComponent {
     id: 101,
     name: "Bosdu"
   };
+
+  @Input() contentTemplate!: any;
 }

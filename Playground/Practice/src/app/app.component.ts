@@ -12,7 +12,7 @@ export class AppComponent implements AfterViewInit, OnInit{
 
   items = ['Angular', 'React', 'Vue'];
 
-  isActive = true;
+  isActive = false;
 
   show = true;
 

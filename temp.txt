@@ -229,3 +229,5 @@ So `index.ts` is **just a shortcut** to simplify imports.
 ✔ **Use it for organizing multiple related files** (but avoid it for single-file directories).  
 
 Hope that clears it up! Let me know if you need a hands-on example. 😊
+
+------------------------------------------------------------------------------------------------------------

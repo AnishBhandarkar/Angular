@@ -22,6 +22,10 @@ Table of Contents:
 # Why Not Use JS DOM Query Methods? instead of template variables?
 # How `document.querySelector()` Works in an Angular Application
 # @ViewChild & @ViewChildren in Angular
+# <ng-template> in Angular
+# <ng-container> in angular
+# <ng-content> in angular.
+# <ng-container> vs <ng-template> vs <ng-content>
 
 
 
@@ -2326,7 +2330,570 @@ Final Thoughts
 
 ===========================================================================================================================================
 
+# <ng-template> in Angular
 
+What is `ng-template`?
+- `ng-template` is an Angular directive used to define template content that is not rendered directly into the DOM.
+- It is a structural directive that allows you to create reusable and dynamic UI components.
+- The content inside `ng-template` is not rendered unless explicitly instructed.
+
+Why is `ng-template` Used?
+1. Lazy Rendering: Content inside `ng-template` is not rendered until explicitly needed, improving performance.
+2. Reusability: Helps in defining reusable UI blocks.
+3. Structural Directives: Used with `*ngIf`, `*ngFor`, `*ngSwitch` to manage DOM dynamically.
+4. Dynamic Component Rendering: Can be used with `ngTemplateOutlet` to create dynamic UIs.
+5. Custom Directives: Useful when you want to pass template references as inputs to components.
+
+---
+
+How `ng-template` Works?
+- `ng-template` itself does not render content until used explicitly.
+- The template content is only instantiated when used inside a structural directive or injected via `ngTemplateOutlet`.
+
+Basic Example
+
+<ng-template>
+  <p>This will not be rendered unless explicitly used.</p>
+</ng-template>
+
+- The above code does not display anything because `ng-template` is inert by default.
+
+---
+
+Where is `ng-template` Used?
+1. With `*ngIf` (Conditional Rendering)
+- `ng-template` can be used with `*ngIf` to display content conditionally.
+
+Example:
+
+<div *ngIf="isLoggedIn; else loggedOut">
+  <p>Welcome User!</p>
+</div>
+
+<ng-template #loggedOut>
+  <p>Please log in.</p>
+</ng-template>
+
+- If `isLoggedIn` is `true`, it shows "Welcome User!".
+- If `isLoggedIn` is `false`, it renders the `ng-template` content.
+
+---
+
+2. With `*ngFor` (Looping with Templates)
+- `ng-template` can be used inside `*ngFor` to create reusable list templates.
+
+Example:
+
+<ng-template let-user let-i="index" [ngForOf]="users">
+  <p>{{ i + 1 }}. {{ user.name }}</p>
+</ng-template>
+
+- Here, `ng-template` is used to loop over a list and display names dynamically.
+
+---
+
+3. With `ngTemplateOutlet` (Dynamic Content Rendering)
+- `ngTemplateOutlet` allows you to pass `ng-template` dynamically.
+
+Example:
+
+<ng-template #dynamicContent>
+  <p>This is a dynamic content block.</p>
+</ng-template>
+
+<div *ngTemplateOutlet="dynamicContent"></div>
+
+- The `<div>` dynamically renders the content inside `#dynamicContent`.
+
+---
+
+4. Passing `ng-template` as an Input to a Component
+- You can pass templates as inputs to reusable components.
+
+Example (Parent Component)
+
+<app-card [contentTemplate]="cardTemplate"></app-card>
+
+<ng-template #cardTemplate>
+  <p>Custom content inside the card!</p>
+</ng-template>
+
+
+Example (Child Component)
+
+@Component({
+  selector: 'app-card',
+  template: `
+    <div class="card">
+      <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
+    </div>
+  `
+})
+export class CardComponent {
+  @Input() contentTemplate: TemplateRef<any>;
+}
+
+- Here, the `ng-template` is passed as an input to the child component.
+
+---
+
+When to Use `ng-template`?
+1. When you need to conditionally render content (`*ngIf`, `*ngFor`).
+2. When you want to improve performance by rendering content lazily.
+3. When creating reusable UI blocks that can be dynamically injected.
+4. When defining dynamic component templates using `ngTemplateOutlet`.
+5. When working with content projection in advanced component design.
+
+---
+
+When NOT to Use `ng-template`?
+1. If you don’t need lazy rendering – Regular elements should be used.
+2. When content should always be in the DOM – `ng-template` keeps content out of the DOM until explicitly used.
+3. For simple static templates – No need to wrap them inside `ng-template`.
+4. If using an alternative approach like Components or Directives – Sometimes, using components is a better way to manage reusable content.
+
+---
+
+Key Takeaways
+✔ `ng-template` does not render directly in the DOM.  
+✔ It is used with directives like `*ngIf`, `*ngFor`, and `ngTemplateOutlet`.  
+✔ Improves performance by preventing unnecessary DOM rendering.  
+✔ Can be passed as an input to components for dynamic UI generation.  
+✔ Avoid using it if content does not require dynamic rendering or lazy loading.
+
+===========================================================================================================================================
+
+# <ng-container> in angular
+
+1. What is `<ng-container>`?  
+- <ng-container> is an Angular structural directive that serves as a logical grouping element without rendering any extra DOM. 
+- Unlike `<div>` or `<span>`, which create actual HTML elements, `<ng-container>` does not appear in the final rendered DOM. 
+- It is mainly used for applying structural directives (`*ngIf`, `*ngFor`, etc.) without introducing unnecessary elements.
+
+---
+
+2. Why and When to Use `<ng-container>`?  
+1. Avoiding Unnecessary Wrapping Elements  
+- When you apply `*ngIf` or `*ngFor` on a `<div>` or `<span>`, it creates an extra element in the DOM. If you don’t want that extra element, use `<ng-container>`.  
+
+✅ Example - Without Extra Div  
+
+<ng-container *ngIf="isLoggedIn">
+  <p>Welcome, User!</p>
+  <button (click)="logout()">Logout</button>
+</ng-container>
+
+👉 This does not create an extra `<div>`, it directly renders the `<p>` and `<button>`.
+
+🚫 Without `<ng-container>` (Extra `<div>` in DOM)  
+
+<div *ngIf="isLoggedIn">
+  <p>Welcome, User!</p>
+  <button (click)="logout()">Logout</button>
+</div>
+
+👉 This unnecessarily adds an extra `<div>`.
+
+---
+
+2. Applying Multiple Structural Directives  
+Since Angular does not allow multiple structural directives on the same element, you can use `<ng-container>` to apply multiple conditions.
+
+🚫 Wrong (Syntax Error)  
+
+<p *ngIf="isLoggedIn" *ngFor="let user of users">
+  {{ user.name }}
+</p>
+
+👉 This throws an error because `*ngIf` and `*ngFor` cannot be used together on the same element.
+
+✅ Solution Using `<ng-container>`  
+
+<ng-container *ngIf="isLoggedIn">
+  <p *ngFor="let user of users">
+    {{ user.name }}
+  </p>
+</ng-container>
+
+👉 Now both `*ngIf` and `*ngFor` work without issues.
+
+---
+
+3. Grouping Elements Without Affecting Layout  
+When you need to apply a directive to multiple elements, `<ng-container>` helps group them together logically without adding extra elements.
+
+✅ Example - Applying `*ngIf` to Multiple Elements  
+
+<ng-container *ngIf="isAdmin">
+  <h2>Admin Dashboard</h2>
+  <button (click)="manageUsers()">Manage Users</button>
+</ng-container>
+
+👉 No extra `<div>`, just directly renders `<h2>` and `<button>` if `isAdmin` is `true`.
+
+---
+
+4. Conditionally Rendering Table Rows (`<tr>`)  
+Since `<tr>` must be inside a `<table>`, you cannot use `*ngIf` directly on `<table>`, but `<ng-container>` can help.
+
+🚫 Wrong (HTML Structure Issue)  
+
+<table>
+  <tr *ngIf="users.length === 0">
+    <td colspan="2">No users found</td>
+  </tr>
+</table>
+
+👉 This may break the table structure.
+
+✅ Correct Way Using `<ng-container>`  
+
+<table>
+  <ng-container *ngIf="users.length === 0">
+    <tr>
+      <td colspan="2">No users found</td>
+    </tr>
+  </ng-container>
+</table>
+
+👉 `<ng-container>` ensures the `<tr>` is conditionally included without breaking the `<table>` structure.
+
+---
+
+3. Where NOT to Use `<ng-container>`?
+- If You Need a Wrapper Element for Styling/Layout:  
+  `<ng-container>` does not create an actual element, so CSS selectors or styling rules won’t work.
+  
+  <ng-container class="my-container"> <!-- ❌ Won’t work -->
+    <p>Some text</p>
+  </ng-container>
+  
+  👉 Instead, use a `<div>` if styling is needed:
+  
+  <div class="my-container">
+    <p>Some text</p>
+  </div>
+  
+
+- If You Need a Referenceable Element (`#templateRef` or `@ViewChild`)  
+  `<ng-container>` cannot be referenced because it doesn’t exist in the DOM.
+  
+  <ng-container #myContainer> <!-- ❌ Won’t work -->
+    <p>Content inside</p>
+  </ng-container>
+  
+  👉 Instead, use a `<div>` if referencing is required:
+  
+  <div #myContainer>
+    <p>Content inside</p>
+  </div>
+  
+
+---
+
+4. Summary - When to Use `<ng-container>`?
+✅ Use `<ng-container>` when:  
+✔️ You need to conditionally render multiple elements without adding extra HTML.  
+✔️ You need to use multiple structural directives on the same block of elements.  
+✔️ You need to wrap `<tr>`, `<td>`, or inline elements without breaking the structure.  
+
+🚫 Avoid `<ng-container>` when:  
+❌ You need a referenceable element (`#ref`, `@ViewChild`).  
+❌ You need to apply CSS styles or classes.  
+
+
+===========================================================================================================================================
+
+
+# <ng-content> in angular.
+
+- ng-content is a special directive used in Angular to implement content projection.
+- It allowes to pass content from a parent component into a child component. 
+- This is useful when you want to create reusable and flexible components while allowing users to provide their own content inside them.  
+
+---
+
+1. What is `ng-content`?  
+- `ng-content` is a built-in Angular directive that serves as a placeholder where projected content from the parent component will be inserted.
+- It enables developers to create custom wrappers, modal dialogs, card layouts, and other reusable UI components.
+
+---
+
+2. Why is `ng-content` used?  
+
+It is mainly used for:  
+✅ Creating reusable UI components – Allows passing custom content to a child component.  
+✅ Decoupling layout from content – The child component only provides structure, while the parent provides content.  
+✅ Dynamic UI Composition – Different content can be projected without modifying the child component.  
+
+---
+
+3. How to use `ng-content`?  
+
+Basic Usage
+Example: Creating a reusable card component  
+
+Child Component (`card.component.html`)
+
+<div class="card">
+  <h2>Card Header</h2>
+  <ng-content></ng-content> <!-- Placeholder for projected content -->
+  <p>Card Footer</p>
+</div>
+
+Parent Component (`app.component.html`)
+
+<app-card>
+  <p>This is projected content inside the card!</p>
+</app-card>
+
+Rendered Output
+
+<div class="card">
+  <h2>Card Header</h2>
+  <p>This is projected content inside the card!</p>
+  <p>Card Footer</p>
+</div>
+
+👉 `<ng-content></ng-content>` gets replaced with the content inside `<app-card>`
+
+---
+
+4. Multi-slot Content Projection  
+When a component needs to accept multiple different content sections (e.g., header, body, footer), we use `select` attribute inside `ng-content`.  
+
+Example: A Dialog Component with Slots
+
+Child Component (`dialog.component.html`)
+
+<div class="dialog">
+  <div class="header-class">
+    <ng-content select="[header]"></ng-content>  <!-- Projects header content -->
+  </div>
+  <div class="body-class">
+    <ng-content select="[body]"></ng-content>  <!-- Projects body content -->
+  </div>
+  <div class="footer-class">
+    <ng-content select="[footer]"></ng-content>  <!-- Projects footer content -->
+  </div>
+</div>
+
+Parent Component (`app.component.html`)
+
+<app-dialog>
+  <h1 header>Dialog Title</h1>
+  <p body>This is the dialog body.</p>
+  <button footer>Close</button>
+</app-dialog>
+
+Rendered Output
+
+<div class="dialog">
+  <div class="header">
+    <h1>Dialog Title</h1>
+  </div>
+  <div class="body">
+    <p>This is the dialog body.</p>
+  </div>
+  <div class="footer">
+    <button>Close</button>
+  </div>
+</div>
+
+✅ Multiple `ng-content` tags allow targeting different content areas.  
+✅ The `select` attribute matches elements with corresponding attributes (`[header]`, `[body]`, `[footer]`).
+
+---
+
+5. Conditional Content Projection (Using `*ngIf`)
+You cannot directly use `*ngIf` with `ng-content`, but you can wrap it in a `<ng-container>`.
+
+Example:
+
+<ng-container *ngIf="showContent">
+  <ng-content></ng-content>
+</ng-container>
+
+📌 This conditionally displays projected content when `showContent` is `true`.
+
+---
+
+6. When NOT to use `ng-content`?  
+🚫 When the content should be dynamically modified by the child component  
+- `ng-content` only displays the content but cannot modify it. If you need to change the content dynamically, consider using `@Input()` instead.
+
+🚫 When content needs to be accessed in TypeScript  
+- `ng-content` does not provide direct access to projected content inside the child component’s TypeScript file.  
+- If you need access to the content in the child component, use `@ContentChild` or `@ContentChildren`.
+
+Example: Accessing Projected Content
+ts
+@ContentChild('myContent') projectedContent!: ElementRef;
+
+
+🚫 When dynamic rendering is required (Use `*ngTemplateOutlet` instead)  
+- `ng-content` works for static projection.  
+- If content needs to be dynamically rendered, use `ng-template` and `ngTemplateOutlet`.
+
+Example: Dynamic Template Rendering
+
+<ng-container *ngTemplateOutlet="customTemplate"></ng-container>
+
+<ng-template #customTemplate>
+  <p>This is dynamically loaded content.</p>
+</ng-template>
+
+---
+
+7. Conclusion  
+🔹 `ng-content` is great for content projection in reusable components.  
+🔹 It allows single-slot and multi-slot projection.  
+🔹 It cannot modify content dynamically (use `@Input()` or `ngTemplateOutlet` instead).  
+🔹 Use `@ContentChild` to access projected content inside a child component.  
+🔹 Avoid using `ng-content` if you need dynamic modifications—use `ngTemplateOutlet` instead. 
+
+
+Note:
+parent component:
+<app-heroes [contentTemplate]="mytemp">
+    <h3 style="color:blueviolet">Media nanna shatakke samans</h3>
+    <p>loda</p>
+    <img src="" alt="bc">
+</app-heroes>
+
+child cmponent:
+@Component({
+  selector: 'app-heroes',
+  template: `
+    <ng-content></ng-content>
+  `
+})
+export class HeroesComponent {
+}
+
+All 3 tags from parent are places into one ng-content in child.
+
+===========================================================================================================================================
+
+# ContentChild() and #ContentChildren() in angular.
+
+1. `@ContentChild`
+- Used to get a reference to a single projected element or directive inside a component.
+- Works with `ng-content` to access a single child element.
+- It returns the first matching element in the projected content.
+
+Syntax:
+@ContentChild('refName', { static: boolean }) varName!: Type; // static: false by default.
+
+  - @ContentChild(...) → Decorator that retrieves a reference to a single element inside <ng-content>.
+  - 'refName' → The reference name of the element inside the parent template (#title).
+  - { static: false } → Determines when the query is resolved.
+  - varName!: Type; → Stores the reference to the matched element.
+
+
+- Why Use { static: true/false } in @ContentChild?
+  - static: true
+    - The query is resolved before ngOnInit(), meaning it is available during component initialization.
+    - Used when the content does not change dynamically.
+  - static: false (default)
+    - The query is resolved after the view is initialized, specifically in ngAfterContentInit().
+    - Used when the content is dynamically projected and may change.
+
+
+
+// Child component
+import { Component, ContentChild, ElementRef, AfterContentInit } from '@angular/core';
+@Component({
+  selector: 'app-child',
+  template: `<ng-content></ng-content>`
+})
+export class ChildComponent implements AfterContentInit {
+  
+  @ContentChild('title') title!: ElementRef; // {static:false} by default
+
+  ngAfterContentInit() {
+    console.log("Title Content:", this.title.nativeElement.innerText);
+    this.title.nativeElement.style.color = 'red';  // Modifies the projected content
+  }
+}
+
+
+// Parent Component
+<app-child>
+  <h2 #title>Projected Title</h2>  <!-- This will be accessed by @ContentChild -->
+</app-child>
+
+
+---
+
+2. `@ContentChildren`
+- Used to get multiple projected elements or directives.
+- Returns a `QueryList` of all matching elements.
+
+Syntax:
+@ContentChildren('refName') varName!: QueryList<Type>;
+
+  - @ContentChildren(...) → Decorator that retrieves multiple elements projected inside <ng-content>.
+  - 'refName' → Reference name of projected elements (#refName in the parent component).
+  - varName!: QueryList<Type>; → Stores all matched elements in a QueryList.
+
+
+// Child component
+import { Component, ContentChildren, QueryList, ElementRef, AfterContentInit } from '@angular/core';
+@Component({
+  selector: 'app-child',
+  template: `<ng-content></ng-content>`
+})
+export class ChildComponent implements AfterContentInit {
+
+  @ContentChildren('item') items!: QueryList<ElementRef>;
+
+  ngAfterContentInit() {
+    this.items.forEach((item) => {
+      console.log("Item:", item.nativeElement.innerText);
+      item.nativeElement.style.color = 'blue';  // Apply changes to all matched elements
+    });
+  }
+}
+
+
+// Parent Component
+<app-child>
+  <p #item>Item 1</p>  
+  <p #item>Item 2</p>  
+  <p #item>Item 3</p>  <!-- All these will be accessed by @ContentChildren -->
+</app-child>
+
+
+---
+
+Key Differences
+| Feature          | `@ContentChild`                                        | `@ContentChildren` |
+|------------------|--------------------------------------------------------|-----------------|
+| Purpose          | Gets a single projected element                        | Gets multiple projected elements |
+| Returns          | `ElementRef` or `Directive` instance                   | `QueryList<ElementRef>` |
+| Usage Scenario   | When you need to access one specific projected element | When you need to handle multiple projected elements |
+| Access Lifecycle | Best accessed in `ngAfterContentInit()`                | Best accessed in `ngAfterContentInit()` |
+
+
+
+===========================================================================================================================================
+
+
+# <ng-container> vs <ng-template> vs <ng-content>
+
+| Feature                      |<ng-container>  | `<ng-template>`                    | `<ng-content>` |
+|------------------------------|----------------|------------------------------------|---------------|
+| Renders in DOM?              | ✅ Yes         | ❌ No (Requires `ngTemplateOutlet`) | ✅ Yes |
+| Uses Structural Directives?  | ✅ Yes         | ✅ Yes(Not directly on ng-template) | ❌ No |
+| Used for Projection?         | ❌ No          | ❌ No                               | ✅ Yes |
+| Grouping Elements?           | ✅ Yes         | ❌ No                               | ❌ No |
+
+- Use `<ng-container>` for grouping elements and applying multiple directives without adding extra DOM.
+- Use `<ng-template>` for deferring content rendering until explicitly inserted.
+- Use `<ng-content>` for projecting child content into a component.
+
+===========================================================================================================================================
 
 
 

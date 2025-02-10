@@ -4,4 +4,13 @@
 <label for="name">Hero name</label>
 <input type="text" id="name" placeholder="name" [(ngModel)]="hero.name">
 
+<br><br>
+
+<div *ngTemplateOutlet="contentTemplate"></div>
+
+<br><br>
+
 <button>Heroes</button>
+
+<ng-content></ng-content>
+

@@ -1,15 +1,28 @@
 <div id='app-header'></div>
 <h1 appHighlight [ngClass]="{'active': isActive}" *ngIf="show">{{title}}</h1>
-<app-heroes></app-heroes>
 
+
+<br>
 <button>App</button>
+<br> <br>
 
 
 
-<ul [ngClass]="{active: isActive}" [ngStyle]="{color: 'red', 'font-size.px':'60'}">
-    <li *ngFor="let item of items; index as i">{{i}} - {{item}}</li>
-</ul>
+<ng-template #mytemp>
+    <ul [ngClass]="{active: isActive}" [ngStyle]="{color: 'red', 'font-size.px':'60'}">
+        <li *ngFor="let item of items; index as i">{{i}} - {{item}}</li>
+    </ul>
+</ng-template>
 
 
 <input type="text" #inp placeholder="enter name">
 <button (click)="btnClicked($event)">Call</button>
+
+
+<app-heroes [contentTemplate]="mytemp">
+    <h3 style="color:blueviolet">Media nanna shatakke samans</h3>
+    <p>loda</p>
+    <img src="" alt="bc">
+</app-heroes>
+
+
